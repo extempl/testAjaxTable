@@ -1,0 +1,44 @@
+body {
+	background-color: #69727c;
+	font-family: Arial;
+	font-size: 10px;
+}
+
+nav.main ul {
+	font-size: 18px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+nav.main li {
+	display: inline-block;
+	margin: 2px;
+	padding: 2px 5px;
+}
+
+nav.main .act, nav.main li:hover {
+	background-color: #9ba2a9;
+}
+
+nav.main a {
+	color: #d5dce5;
+	text-decoration: underline;
+}
+
+nav.main .act a {
+	text-decoration: none;
+}
+
+.content {
+	background-color: #fff;
+	padding: 5px;
+	margin:  10px 5px;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: 30px;
+	margin: 10px;
+
+}
