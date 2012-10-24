@@ -40,5 +40,29 @@ h1 {
 	font-weight: bold;
 	font-size: 30px;
 	margin: 10px;
+}
 
+.filter label {
+	display: inline-block;
+	position: relative;
+}
+
+.filter .search {
+	width: 348px;
+	height: 19px;
+	border: 1px solid #dbdadc;
+	padding: 2px 20px 0 12px;
+	border-radius: 11px;
+	font-size: 12px;
+	box-shadow: inset 0 1px 1px #bbb9bb;
+	outline: none;
+}
+
+.filter .searchClear {
+	height: 14px;
+	width: 14px;
+	background: transparent url(searchClear.png) no-repeat center center;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
