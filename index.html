@@ -16,17 +16,45 @@
 <div class="content">
     <h1 class="main">Компании</h1>
     <div class="filter">
-        <label>
-            <input class="search" placeholder="Название, контактное лицо" />
+        <label class="search">
+            <span></span><br />
+            <input placeholder="Название, контактное лицо" />
             <div class="searchClear"></div>
         </label>
-        <label>
-            <span>По виду деятельности:</span>
+        <label class="kindOfActivity">
+            <span>По виду деятельности</span><br />
             <select>
                 <option>Все виды</option>
             </select>
         </label>
     </div>
+    <table class="main">
+        <thead>
+            <tr>
+                <th class="sortDown"><span><a>Название</a></span></th>
+                <th><span><a href="">Виды деятельности</a></span></th>
+                <th><span><a href="">Контактное лицо</a></span></th>
+                <th><span><a href="">Заработано</a>, грн</span></th>
+                <th><span><a href="">Сумма</a>, грн</span></th>
+                <th><span><a href="">Сделки</a></span></th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="">5 элемент</a></td>
+            <td>--</td>
+            <td><a href="">Константин Рыкин</a></td>
+            <td>12323</td>
+            <td>102323</td>
+            <td class="deals">
+                <div class="yellowDeals manyDeals">22</div>
+                <div class="greenDeals fewDeals">5</div>
+                <div class="redDeals normalDeals">11</div>
+                <br  clear="all" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
