@@ -30,6 +30,25 @@ var init = function () {
 		}
 		e.preventDefault();
 	});
+	setTheadWidth();
+	document.addEventListener('scroll', theadReposition);
+};
+
+var theadReposition = function () {
+	var table = document.getElementsByTagName('table')[0];
+	var thead = table.getElementsByTagName('thead')[0];
+	var helper = table.getElementsByClassName('dockedHelper')[0];
+	var scrolledEnough = document.body.scrollTop > getAbsolutePosition(table).top;
+	toggleClass(thead, 'docked', scrolledEnough);
+	toggleClass(helper, 'docked', scrolledEnough);
+};
+
+var setTheadWidth = function () {
+	var ths = document.getElementsByTagName('table')[0].getElementsByTagName('th');
+	var i,l;
+	for(i = 0, l = ths.length; i < l; i++) {
+		ths[i].style.width = ths[i].offsetWidth - (hasClass(ths[i], 'unit') ? 0 : 20) + 'px';
+	}
 };
 
 var getNewData = function (fParameters) {
@@ -54,7 +73,7 @@ var getNewData = function (fParameters) {
 	// change all links (reinit paginator)
 };
 
-var toggleSearchClass = function(input) {
+var toggleSearchClass = function (input) {
 	console.log(input.toString());
 	if(typeof input === 'undefined' || ~['[object KeyboardEvent]', '[object Event]'].indexOf(input.toString()))
 		input = this;
@@ -82,4 +101,15 @@ function toggleClass(el, cls, trigger) {
 		addClass(el, cls);
 	else
 		removeClass(el, cls);
+}
+
+function getAbsolutePosition(obj) {
+	var curLeft = 0, curTop = 0;
+	if(obj.offsetParent) {
+		do {
+			curLeft += obj.offsetLeft;
+			curTop += obj.offsetTop;
+		} while(obj = obj.offsetParent);
+	}
+	return {left: curLeft, top: curTop};
 }

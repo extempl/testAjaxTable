@@ -3,6 +3,7 @@ body {
 	font-family: Arial;
 	font-size: 10px;
 	cursor: default;
+	margin: 8px;
 }
 
 nav.main ul {
@@ -101,12 +102,25 @@ table.main {
 	border-collapse: collapse;
 }
 
+table.main thead.docked {
+	position:     fixed;
+	top:          0;
+	background:   #fff;
+}
+
+table.main .dockedHelper.docked {
+	height: 31px;
+}
+
 table.main th {
-	position: relative;
-	font-size: 15px;
-	color: #5b5a5c;
-	padding: 0 10px;
+	position:   relative;
+	font-size:  15px;
+	color:      #5b5a5c;
+	padding:    0 10px;
 	text-align: left;
+}
+
+table.main > thead th {
 	border-bottom: 2px solid #f3f6f8;
 }
 
