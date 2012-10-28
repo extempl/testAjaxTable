@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js"></script>
 </head>
-<body>
+<body onload="init();">
 <nav class="main">
     <ul>
         <li><a href="">Дела</a></li>
@@ -18,23 +18,24 @@
     <div class="filter">
         <label class="search">
             <span></span><br />
-            <input placeholder="Название, контактное лицо" />
+            <input placeholder="Название, контактное лицо" name="search" />
             <div class="searchClear"></div>
         </label>
         <label class="kindOfActivity">
             <span>По виду деятельности</span><br />
-            <select>
-                <option>Все виды</option>
+            <select name="kindOfActivity">
+                <option value="all">Все виды</option>
+                <option value="stores">Магазины</option>
             </select>
         </label>
     </div>
     <table class="main">
         <thead>
             <tr>
-                <th class="sortDown sortable"><span><a href="">Название</a></span></th>
+                <th class="sortDesc sortable"><span><a href="">Название</a></span></th>
                 <th class="sortable"><span><a href="">Виды деятельности</a></span></th>
                 <th class="sortable"><span><a href="">Контактное лицо</a></span></th>
-                <th class="sotable num"><span><a href="">Заработано</a></span></th>
+                <th class="sortable num"><span><a href="">Заработано</a></span></th>
                 <th class="unit">, грн</th>
                 <th class="sortable num"><span><a href="">Сумма</a></span></th>
                 <th class="unit">, грн</th>
@@ -57,6 +58,22 @@
                 <div class="redDeals normalDeals">11</div>
             </td>
             <td class="edit"><div class="icon"></div></td>
+        </tr>
+        <tr>
+            <td><a href="">5 элемент</a></td>
+            <td class="empty"></td>
+            <td><a href="">Константин Рыкин</a></td>
+            <td class="num empty"></td>
+            <td></td>
+            <td class="num">102323</td>
+            <td></td>
+            <td class="deals">
+                <div class="yellowDeals manyDeals">22</div>
+                <div class="greenDeals normalDeals">12</div>
+            </td>
+            <td class="edit">
+                <div class="icon"></div>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -91,11 +108,8 @@
                             <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
                         </filter>
                     </defs>
-                    <g style="pointer-events:all">
-                        <title style="pointer-events:inherit">Layer 1</title>
-                        <path d="M0,0 H235 L250,25 235,50 H0 Z" id="popupArrow" fill="url(#gradient)" filter="url(#shadow)"
-                              stroke="#b0aeb0" stroke-width="1" style="pointer-events:inherit"></path>
-                    </g>
+                    <g><path d="M0,0 H235 L250,25 235,50 H0 Z" id="popupArrow" fill="url(#gradient)"
+                             filter="url(#shadow)" stroke="#b0aeb0" stroke-width="1"></path></g>
                 </svg>
             </svg>
         </div>

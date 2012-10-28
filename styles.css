@@ -82,6 +82,10 @@ h1 {
 	display: none;
 }
 
+.filter > .search > .noEmpty + .searchClear {
+	display: block;
+}
+
 .filter > label > span {
 	font-weight: bold;
 	font-size: 11px;
@@ -161,14 +165,15 @@ table.main th.num, table.main td.num {
 }
 
 table.main th.num > span {
-	padding-right: 0;
+	padding-right: 10px;
+	margin-right: -10px;
 }
 
 table.main th.unit {
 	padding: 0 0 3px;
 }
 
-table.main th.sortDown > span, table.main th.sortUp > span {
+table.main th.sortDesc > span, table.main th.sortAsc > span {
 	background-color: #f1f6fe;
 }
 
@@ -177,11 +182,11 @@ table.main th.sortable > span > a::before {
 	left:     7px;
 }
 
-table.main th.sortDown > span > a::before {
+table.main th.sortDesc > span > a::before {
 	content: '↓';
 }
 
-table.main th.sortUp > span > a::before {
+table.main th.sortAsc > span > a::before {
 	content: '↑';
 }
 
