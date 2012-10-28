@@ -34,6 +34,38 @@ var init = function () {
 	document.addEventListener('scroll', theadReposition);
 };
 
+var generatePaginator = function (offset, count) {
+	var list, i, l, tmpI, offsetTmp;
+	list = [1]; // always 1 page
+	if(count < 2)
+		return list;
+	if(offset > count)
+		offset = count;
+	if(offset < 1)
+		offset = 1;
+
+	if(offset > 5)
+		list.push(0); // ...
+
+	tmpI = offset - (offset > 4 ? 3 : offset - 2);
+	if(offset != 1)
+		for(i = tmpI; i <= offset; i++)
+			list.push(i); // before offset not including it
+
+	offsetTmp = offset + 1;
+	l = offsetTmp + (count - offsetTmp > 2 ? 3 : count - offsetTmp);
+	for(i = offsetTmp; i < l; i++)
+		list.push(i); // after offset including it
+
+	if(count - offset > 4)
+		list.push(0); // ...
+
+	if(!~list.indexOf(count))
+		list.push(count); // last page if still not in the list
+
+	return list;
+};
+
 var theadReposition = function () {
 	var table = document.getElementsByTagName('table')[0];
 	var thead = table.getElementsByTagName('thead')[0];
