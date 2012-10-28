@@ -2,6 +2,7 @@ body {
 	background-color: #69727c;
 	font-family: Arial;
 	font-size: 10px;
+	cursor: default;
 }
 
 nav.main ul {
@@ -33,18 +34,23 @@ nav.main .act a {
 
 .content {
 	background-color: #fff;
-	padding: 5px;
+	padding: 5px 0;
 	margin:  10px 5px;
+}
+
+a:hover {
+	color: #d43f48 !important;
 }
 
 h1 {
 	font-weight: bold;
 	font-size: 30px;
-	margin: 10px;
+	padding: 15px 20px;
+	margin: 0;
 }
 
 .filter {
-	/*margin-top: 10px;*/
+	margin-left: 5px;
 }
 
 .filter > label {
@@ -88,19 +94,20 @@ h1 {
 table.main {
 	margin-top: 25px;
 	width: 94%;
+	border-collapse: collapse;
 }
 
 table.main th {
 	position: relative;
 	font-size: 15px;
 	color: #5b5a5c;
-	padding: 0 5px;
+	padding: 0 10px;
 	text-align: left;
 	border-bottom: 2px solid #f3f6f8;
 }
 
 table.main th > span {
-	padding:  4px 8px 8px 20px;
+	padding:  4px 8px 8px 18px;
 	position: relative;
 	display:  inline-block;
 }
@@ -111,22 +118,70 @@ table.main th > span > a {
 	border-bottom: 1px dashed #5b5a5c;
 }
 
+table.main > tbody > tr:hover {
+	background-color: #f0f7ff;
+}
+
+table.main > tbody > tr:hover > td.edit > .icon {
+	display: block;
+}
+
+table.main td.edit {
+	position: relative;
+}
+
+table.main td.edit > .icon {
+	cursor: pointer;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	background: transparent url(pen.png) no-repeat center center;
+	width: 15px;
+	height: 15px;
+	display: none;
+}
+
 table.main td {
-	padding-left: 25px; /*TODO*/
+	padding: 10px 0 10px 27px;
 	font-size: 14px;
+}
+
+table.main td a {
+	color: #689db8;
+}
+
+table.main td.empty::before {
+	content: '—';
+	color: #b36c7d;
+}
+
+table.main th.num, table.main td.num {
+	text-align: right;
+	padding-right: 0;
+}
+
+table.main th.num > span {
+	padding-right: 0;
+}
+
+table.main th.unit {
+	padding: 0 0 3px;
 }
 
 table.main th.sortDown > span, table.main th.sortUp > span {
 	background-color: #f1f6fe;
 }
 
-table.main th.sortDown > span > a:before, table.main th.sortUp > span > a:before {
-	content: '↓';
+table.main th.sortable > span > a::before {
 	position: absolute;
-	left: 7px;
+	left:     7px;
 }
 
-table.main th.sortUp > span > a:before {
+table.main th.sortDown > span > a::before {
+	content: '↓';
+}
+
+table.main th.sortUp > span > a::before {
 	content: '↑';
 }
 
@@ -168,4 +223,102 @@ table.main th.sortUp > span > a:before {
 .fewDeals {
 	border-radius: 8px;
 	margin: 4px;
+}
+
+.paginator {
+	font-family: Arial;
+	font-size: 14px;
+	margin-left: 27px;
+	padding: 0;
+	list-style: none;
+}
+
+.paginator > li, .paginator a {
+	display: inline-block;
+}
+
+.paginator > li.current {
+	background-color: #f3f2f7;
+	font-weight: bold;
+}
+
+.paginator > li.current > a {
+	color: #d43f48;
+	cursor: default;
+	text-decoration: none;
+}
+
+.paginator > li.disabled > a {
+	color: #d5d5d5 !important;
+	cursor: default;
+}
+
+.paginator a {
+	padding: 2px 6px;
+	color: #689db8;
+	text-decoration: underline;
+}
+
+.paginator > li:first-child > a, .paginator > li:last-child > a {
+	text-decoration: none;
+}
+
+.popupWrapper {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
+	background-color: rgba(0, 0, 0, .4);
+	display: none;
+}
+
+.popup {
+	background-color: #fff;
+	width: 730px;
+	height: 760px;
+	margin:  30px auto;
+	position: relative;
+}
+
+.popup > .closeIcon {
+	width: 34px;
+	height: 34px;
+	background: #fff url(closePopup.png) no-repeat center center;
+	cursor: pointer;
+	box-shadow: 0 0 12px #999;
+	position: absolute;
+	right: -20px;
+	top: -20px;
+	border-radius: 17px;
+}
+
+.popup > .popupLeftHeader, .popup > .popupArrow {
+	position: absolute;
+	left: -234px;
+	width: 220px;
+	top: 40px;
+	color: #fff;
+	font-size: 17px;
+	font-weight: bold;
+	padding: 15px;
+}
+
+.popup > .popupArrow {
+	color: #000;
+	top: 90px;
+	width: 225px;
+	height: 25px;
+}
+
+.popup > .popupArrow > span {
+	position: relative;
+	z-index: 1;
+}
+
+.popup > .popupArrow > svg {
+	position: absolute;
+	left: 0;
+	top: 0;
 }

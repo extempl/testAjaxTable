@@ -31,30 +31,80 @@
     <table class="main">
         <thead>
             <tr>
-                <th class="sortDown"><span><a>Название</a></span></th>
-                <th><span><a href="">Виды деятельности</a></span></th>
-                <th><span><a href="">Контактное лицо</a></span></th>
-                <th><span><a href="">Заработано</a>, грн</span></th>
-                <th><span><a href="">Сумма</a>, грн</span></th>
-                <th><span><a href="">Сделки</a></span></th>
+                <th class="sortDown sortable"><span><a href="">Название</a></span></th>
+                <th class="sortable"><span><a href="">Виды деятельности</a></span></th>
+                <th class="sortable"><span><a href="">Контактное лицо</a></span></th>
+                <th class="sotable num"><span><a href="">Заработано</a></span></th>
+                <th class="unit">, грн</th>
+                <th class="sortable num"><span><a href="">Сумма</a></span></th>
+                <th class="unit">, грн</th>
+                <th class="sortable"><span><a href="">Сделки</a></span></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         <tr>
             <td><a href="">5 элемент</a></td>
-            <td>--</td>
+            <td class="empty"></td>
             <td><a href="">Константин Рыкин</a></td>
-            <td>12323</td>
-            <td>102323</td>
+            <td class="num">12323</td>
+            <td></td>
+            <td class="num">102323</td>
+            <td></td>
             <td class="deals">
                 <div class="yellowDeals manyDeals">22</div>
                 <div class="greenDeals fewDeals">5</div>
                 <div class="redDeals normalDeals">11</div>
-                <br  clear="all" />
             </td>
+            <td class="edit"><div class="icon"></div></td>
         </tr>
         </tbody>
     </table>
+    <ul class="paginator">
+        <li class="disabled"><a href="">← Ctrl</a></li>
+        <li class="current"><a href="">1</a></li>
+        <li><a href="">2</a></li>
+        <li><a href="">3</a></li>
+        <li><a href="">4</a></li>
+        <li>...</li>
+        <li><a href="">18</a></li>
+        <li><a href="">Ctrl →</a></li>
+    </ul>
+</div>
+<div class="popupWrapper">
+    <div class="popup">
+        <div class="popupLeftHeader">Кто нужен?</div>
+        <div class="popupArrow">
+            <span>Клиент</span>
+            <svg width="255" height="55" id="popupArrowRoot" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <svg id="svgcontent" viewBox="0 0 255 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <linearGradient id="gradient" x1="0.5" y1="0.5" x2="0.5" y2="0.49">
+                            <stop offset="0.0" stop-color="#f1edf0"></stop>
+                            <stop offset="1.0" stop-color="#fffeff"></stop>
+                        </linearGradient>
+                        <filter id="shadow" x="0" y="0" width="105%" height="105%">
+                            <feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />
+                            <feColorMatrix result="matrixOut" in="offOut" type="matrix"
+                                           values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                            <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="1" />
+                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                        </filter>
+                    </defs>
+                    <g style="pointer-events:all">
+                        <title style="pointer-events:inherit">Layer 1</title>
+                        <path d="M0,0 H235 L250,25 235,50 H0 Z" id="popupArrow" fill="url(#gradient)" filter="url(#shadow)"
+                              stroke="#b0aeb0" stroke-width="1" style="pointer-events:inherit"></path>
+                    </g>
+                </svg>
+            </svg>
+        </div>
+        <div class="closeIcon"></div>
+        <h1 class="main">Редактировать клиента</h1>
+        <form>
+            <input type="submit" value="Сохранить" />
+        </form>
+    </div>
 </div>
 </body>
 </html>
