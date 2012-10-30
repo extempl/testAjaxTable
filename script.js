@@ -51,15 +51,20 @@ var makeAJAXLinks = function (env) {
 		els[i].addEventListener('click', function (e) {
 			if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
 				getNewData(this.getAttribute('href'));
+				console.log(1);
 				e.preventDefault();
 			}
 		});
 		els[i].setAttribute('data-ajaxed', true);
 	}
-}
+};
 
-var parseURLData = function () {
-	var queryData = window.location.search.split('&');
+var parseURLData = function (url) {
+	if(url === undefined)
+		url = window.location.search;
+	if(~url.indexOf('?'))
+		url = url.substring(1);
+	var queryData = url.split('&');
 	var i, l;
 	var result;
 	var queryDataParts;
@@ -85,15 +90,30 @@ var makeURLFromData = function (dataObj) {
 };
 
 var replaceURLWithData = function (data) {
-	return window.location.pathname + makeURLFromData(extend(parseURLData(), data));
+	return window.location.pathname + makeURLFromData(extend(parseURLData(), {page: 1}, data)); // page reset
+};
+
+var updatePageAHREF = function (els, count) {
+	var pageNum, i, l;
+	for (i = 0, l = els.length; i < l; i++) {
+		switch (i) {
+			case 0:
+				pageNum = 1;
+				break;
+			case l - 1:
+				pageNum = count;
+				break;
+			default:
+				pageNum = els[i].innerHTML;
+		}
+		els[i].setAttribute('href', replaceURLWithData({page: pageNum}));
+	}
 };
 
 var renderPaging = function (offset, count) {
 	var pagingEl = document.querySelector('.paging');
 	var list = generatePagesList(offset, count);
 	var i, l;
-	var aEls;
-	var pageNum;
 	l = list.length;
 	pagingEl.innerHTML = '';
 
@@ -105,23 +125,9 @@ var renderPaging = function (offset, count) {
 			'current');
 	}
 	appendLI('<a>Ctrl →</a>', offset === count, 'disabled');
-
-	// update every page link with current link, but extended with pageNum TODO separated function
-	aEls = pagingEl.querySelectorAll('a');
-	for(i = 0, l = aEls.length; i < l; i++) {
-		switch (i) {
-			case 0:
-				pageNum = 1;
-				break;
-			case l - 1:
-				pageNum = count;
-				break;
-			default:
-				pageNum = aEls[i].innerHTML;
-		}
-		aEls[i].setAttribute('href', replaceURLWithData({page: pageNum}));
-	}
-
+	// update every page link with current link, but extended with pageNum
+	updatePageAHREF(pagingEl.querySelectorAll('a'), count);
+	makeAJAXLinks(pagingEl);
 };
 
 var appendLI = function (text, condition, className) {
@@ -196,8 +202,9 @@ var getNewData = function (fParameters, history) {
 	if (history === undefined) {
 		history = true;
 	}
-	var parameters;
+	var parameters = {};
 	if (typeof fParameters === 'string') {
+		parameters = parseURLData(fParameters.split('?')[1]);
 //		parse query string
 	}
 	var event = ~['[object KeyboardEvent]', '[object Event]'].indexOf(fParameters.toString());
@@ -206,21 +213,27 @@ var getNewData = function (fParameters, history) {
 	if (event && this.nodeName === 'INPUT') {
 		isSubmit = fParameters.keyCode === 13;
 	}
-	if (event && isSubmit) {
-		parameters = {};
-		parameters[this.name] = this.value;
+	if (event) {
+		if(isSubmit)
+			parameters[this.name] = this.value;
 	}
-	else {
+	else if (typeof fParameters === 'string') {
+		parameters = parseURLData(fParameters.split('?')[1]);
+//		parse query string
+	} else {
 		parameters = fParameters;
 	}
 	console.log(parameters);
-	// change the page address to needed
+	var targetURL = replaceURLWithData(parameters);
+	document.querySelector('title').innerHTML = targetURL;
 	// add to history
 	if (history) {
-		window.history.pushState();
+		window.history.pushState({}, null, targetURL);
 	}
+
 	// get new data
-	// change all links (reinit paging)
+	var data = {page: 5, pagesCount: 18}; // result
+	renderPaging(data.page, data.pagesCount);
 };
 
 var toggleSearchClass = function (input) {
