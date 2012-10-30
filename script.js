@@ -18,8 +18,10 @@ var init = function () {
 			var sortedUp, sortedDown;
 			sortedUp = el.classList.contains('sortAsc');
 			sortedDown = el.classList.contains('sortDesc');
-			this.querySelector('.sortAsc').classList.remove('sortAsc');
-			this.querySelector('.sortDesc').classList.remove('sortDesc');
+			if(this.querySelector('.sortAsc'))
+				this.querySelector('.sortAsc').classList.remove('sortAsc');
+			if(this.querySelector('.sortDesc'))
+				this.querySelector('.sortDesc').classList.remove('sortDesc');
 			if (!sortedUp && !sortedDown) {
 				toggleClass(el, 'sortDesc');
 			}
@@ -34,8 +36,58 @@ var init = function () {
 	setTheadWidth();
 	document.addEventListener('scroll', theadReposition);
 	window.addEventListener('popstate', function () {
-		getNewData(window.location.pathname + window.location.search, false); // TODO convert to parameters or do it in func
+		getNewData(window.location.pathname + window.location.search, false);
 	});
+
+	var popup = document.querySelector('.popupWrapper');
+	var popupClassList = popup.classList;
+	window.addEventListener('keydown', function (e) {
+		var links, targetLink;
+		var paging = document.querySelector('.paging');
+
+
+		console.log(e.keyCode);
+
+		switch(e.keyCode) {
+			case 27: // esc
+
+				if(popupClassList.contains('editing')) {
+					popupClassList.remove('editing'); // hide() popup? then class must be universal like visible.
+				}
+				break;
+			case 37: // left
+				if (!e.ctrlKey)
+					return true;
+				targetLink = paging.querySelector('a');
+				break;
+			case 39: // right
+				if (!e.ctrlKey)
+					return true;
+				links =  paging.querySelectorAll('a');
+				targetLink = links[links.length - 1];
+				break;
+		}
+		if(targetLink && !targetLink.parentNode.classList.contains('disabled'))
+			getNewData(targetLink.getAttribute('href'));
+	});
+
+	popup.querySelector('.closeIcon').addEventListener('click', function () {
+		popupClassList.remove('editing');
+	});
+
+	bindTable();
+};
+
+var bindTable = function () {
+	var tbody = document.querySelector('table');
+	tbody.addEventListener('click', function (e) {
+		if (e.target.classList.contains('icon') && e.target.parentNode.classList.contains('edit')) {
+			// handle edit function
+			document.querySelector('.popupWrapper').classList.add('editing');
+		}
+	});
+//	var editIcons = table.querySelectorAll('.edit > .icon');
+
 };
 
 var makeAJAXLinks = function (env) {
@@ -50,7 +102,8 @@ var makeAJAXLinks = function (env) {
 			continue;
 		els[i].addEventListener('click', function (e) {
 			if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-				getNewData(this.getAttribute('href'));
+				if(!this.parentNode.classList.contains('disabled'))
+					getNewData(this.getAttribute('href'));
 				console.log(1);
 				e.preventDefault();
 			}
@@ -93,15 +146,15 @@ var replaceURLWithData = function (data) {
 	return window.location.pathname + makeURLFromData(extend(parseURLData(), {page: 1}, data)); // page reset
 };
 
-var updatePageAHREF = function (els, count) {
+var updatePageAHREF = function (els, offset, count) {
 	var pageNum, i, l;
 	for (i = 0, l = els.length; i < l; i++) {
 		switch (i) {
 			case 0:
-				pageNum = 1;
+				pageNum = offset - 1;
 				break;
 			case l - 1:
-				pageNum = count;
+				pageNum = offset + 1;
 				break;
 			default:
 				pageNum = els[i].innerHTML;
@@ -111,6 +164,13 @@ var updatePageAHREF = function (els, count) {
 };
 
 var renderPaging = function (offset, count) {
+	if (offset > count) {
+		offset = count;
+	}
+	if (offset < 1) {
+		offset = 1;
+	}
+
 	var pagingEl = document.querySelector('.paging');
 	var list = generatePagesList(offset, count);
 	var i, l;
@@ -126,7 +186,7 @@ var renderPaging = function (offset, count) {
 	}
 	appendLI('<a>Ctrl →</a>', offset === count, 'disabled');
 	// update every page link with current link, but extended with pageNum
-	updatePageAHREF(pagingEl.querySelectorAll('a'), count);
+	updatePageAHREF(pagingEl.querySelectorAll('a'), offset, count);
 	makeAJAXLinks(pagingEl);
 };
 
@@ -144,12 +204,6 @@ var generatePagesList = function (offset, count) {
 	list = [1]; // always 1 page
 	if (count < 2) {
 		return list;
-	}
-	if (offset > count) {
-		offset = count;
-	}
-	if (offset < 1) {
-		offset = 1;
 	}
 
 	if (offset > 5) {
@@ -216,6 +270,7 @@ var getNewData = function (fParameters, history) {
 	if (event) {
 		if(isSubmit)
 			parameters[this.name] = this.value;
+		fParameters.stopPropagation();
 	}
 	else if (typeof fParameters === 'string') {
 		parameters = parseURLData(fParameters.split('?')[1]);
@@ -232,8 +287,8 @@ var getNewData = function (fParameters, history) {
 	}
 
 	// get new data
-	var data = {page: 5, pagesCount: 18}; // result
-	renderPaging(data.page, data.pagesCount);
+	var data = {page: parameters.page, pagesCount: 18}; // result
+	renderPaging(+data.page, +data.pagesCount);
 };
 
 var toggleSearchClass = function (input) {

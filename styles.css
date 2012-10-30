@@ -293,6 +293,10 @@ table.main th.sortAsc > span > a::before {
 	display: none;
 }
 
+.popupWrapper.editing {
+	display: block;
+}
+
 .popup {
 	background-color: #fff;
 	width: 730px;
