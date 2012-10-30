@@ -1,25 +1,26 @@
 "use strict";
 
 var init = function () {
-	var filter = document.getElementsByClassName('filter')[0];
-	var inputSearch = filter.getElementsByTagName('input')[0];
+	var filter = document.querySelector('.filter');
+	var inputSearch = filter.querySelector('input');
+	var table = document.querySelector('table.main');
 	inputSearch.addEventListener('change', toggleSearchClass);
 	inputSearch.addEventListener('keyup', toggleSearchClass);
 	inputSearch.addEventListener('keydown', getNewData);
-	filter.getElementsByClassName('searchClear')[0].addEventListener('click', function () {
+	filter.querySelector('.searchClear').addEventListener('click', function () {
 		inputSearch.value = '';
 		toggleSearchClass(inputSearch);
 	});
-	filter.getElementsByClassName('kindOfActivity')[0].getElementsByTagName('select')[0].addEventListener('change', getNewData);
-	document.getElementsByTagName('thead')[0].addEventListener('click', function (e) {
+	filter.querySelector('.kindOfActivity > select').addEventListener('change', getNewData);
+	table.querySelector('thead').addEventListener('click', function (e) {
 		var el = e.target.parentNode.parentNode;
-		if(hasClass(el, 'sortable')) {
+		if (el.classList.contains('sortable')) {
 			var sortedUp, sortedDown;
-			sortedUp = hasClass(el, 'sortAsc');
-			sortedDown = hasClass(el, 'sortDesc');
-			removeClass(this.getElementsByClassName('sortAsc')[0], 'sortAsc');
-			removeClass(this.getElementsByClassName('sortDesc')[0], 'sortDesc');
-			if(!sortedUp && !sortedDown) {
+			sortedUp = el.classList.contains('sortAsc');
+			sortedDown = el.classList.contains('sortDesc');
+			this.querySelector('.sortAsc').classList.remove('sortAsc');
+			this.querySelector('.sortDesc').classList.remove('sortDesc');
+			if (!sortedUp && !sortedDown) {
 				toggleClass(el, 'sortDesc');
 			}
 			else {
@@ -32,65 +33,180 @@ var init = function () {
 	});
 	setTheadWidth();
 	document.addEventListener('scroll', theadReposition);
+	window.addEventListener('popstate', function () {
+		getNewData(window.location.pathname + window.location.search, false); // TODO convert to parameters or do it in func
+	});
 };
 
-var generatePaginator = function (offset, count) {
+var makeAJAXLinks = function (env) {
+	if(env === undefined)
+		env = document;
+	var els = env.querySelectorAll('a[href]');
+	var i,l;
+	for(i = 0, l = els.length; i < l; i++) {
+		if(els[i].getAttribute('data-noajax') ||
+		   els[i].getAttribute('data-ajaxed') ||
+		   els[i].getAttribute('target') === '_blank')
+			continue;
+		els[i].addEventListener('click', function (e) {
+			if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+				getNewData(this.getAttribute('href'));
+				e.preventDefault();
+			}
+		});
+		els[i].setAttribute('data-ajaxed', true);
+	}
+}
+
+var parseURLData = function () {
+	var queryData = window.location.search.split('&');
+	var i, l;
+	var result;
+	var queryDataParts;
+	l = queryData.length;
+	result = {};
+	if(l === 1 && queryData[0] === '')
+		return result;
+	for(i = 0; i < l; i++) {
+		queryDataParts = queryData[i].split('=');
+		result[queryDataParts[0]] = decodeURIComponent(queryDataParts[1]);
+	}
+	return result;
+};
+
+var makeURLFromData = function (dataObj) {
+	var url = '';
+	for(var i in dataObj) {
+		if(dataObj.hasOwnProperty(i)) {
+			url += (!url ? '?' : '&') + i + '=' + encodeURIComponent(dataObj[i]);
+		}
+	}
+	return url;
+};
+
+var replaceURLWithData = function (data) {
+	return window.location.pathname + makeURLFromData(extend(parseURLData(), data));
+};
+
+var renderPaging = function (offset, count) {
+	var pagingEl = document.querySelector('.paging');
+	var list = generatePagesList(offset, count);
+	var i, l;
+	var aEls;
+	var pageNum;
+	l = list.length;
+	pagingEl.innerHTML = '';
+
+	appendLI('<a>← Ctrl</a>', offset === 1, 'disabled');
+	for(i = 0; i < l; i++) {
+		appendLI(
+			list[i] === 0 ? '...' : '<a>' + list[i] + '</a>',
+			offset === list[i],
+			'current');
+	}
+	appendLI('<a>Ctrl →</a>', offset === count, 'disabled');
+
+	// update every page link with current link, but extended with pageNum TODO separated function
+	aEls = pagingEl.querySelectorAll('a');
+	for(i = 0, l = aEls.length; i < l; i++) {
+		switch (i) {
+			case 0:
+				pageNum = 1;
+				break;
+			case l - 1:
+				pageNum = count;
+				break;
+			default:
+				pageNum = aEls[i].innerHTML;
+		}
+		aEls[i].setAttribute('href', replaceURLWithData({page: pageNum}));
+	}
+
+};
+
+var appendLI = function (text, condition, className) {
+	var pagingEl = document.querySelector('.paging');
+	var li = document.createElement('li');
+	li.innerHTML = text;
+	if(condition)
+		li.className = className;
+	pagingEl.appendChild(li);
+};
+
+var generatePagesList = function (offset, count) {
 	var list, i, l, tmpI, offsetTmp;
 	list = [1]; // always 1 page
-	if(count < 2)
+	if (count < 2) {
 		return list;
-	if(offset > count)
+	}
+	if (offset > count) {
 		offset = count;
-	if(offset < 1)
+	}
+	if (offset < 1) {
 		offset = 1;
+	}
 
-	if(offset > 5)
-		list.push(0); // ...
+	if (offset > 5) {
+		list.push(0);
+	} // ...
 
 	tmpI = offset - (offset > 4 ? 3 : offset - 2);
-	if(offset != 1)
-		for(i = tmpI; i <= offset; i++)
-			list.push(i); // before offset not including it
+	if (offset != 1) {
+		for (i = tmpI; i <= offset; i++) {
+			list.push(i);
+		}
+	} // before offset not including it
 
 	offsetTmp = offset + 1;
 	l = offsetTmp + (count - offsetTmp > 2 ? 3 : count - offsetTmp);
-	for(i = offsetTmp; i < l; i++)
-		list.push(i); // after offset including it
+	for (i = offsetTmp; i < l; i++) {
+		list.push(i);
+	} // after offset including it
 
-	if(count - offset > 4)
-		list.push(0); // ...
+	if (count - offset > 4) {
+		list.push(0);
+	} // ...
 
-	if(!~list.indexOf(count))
-		list.push(count); // last page if still not in the list
+	if (!~list.indexOf(count)) {
+		list.push(count);
+	} // last page if still not in the list
 
 	return list;
 };
 
 var theadReposition = function () {
-	var table = document.getElementsByTagName('table')[0];
-	var thead = table.getElementsByTagName('thead')[0];
-	var helper = table.getElementsByClassName('dockedHelper')[0];
-	var scrolledEnough = document.body.scrollTop > getAbsolutePosition(table).top;
+	var table, thead, helper, scrolledEnough;
+	table = document.querySelector('table');
+	thead = table.querySelector('thead');
+	helper = table.querySelector('.dockedHelper');
+	scrolledEnough = document.body.scrollTop > getAbsolutePosition(table).top;
 	toggleClass(thead, 'docked', scrolledEnough);
 	toggleClass(helper, 'docked', scrolledEnough);
 };
 
 var setTheadWidth = function () {
-	var ths = document.getElementsByTagName('table')[0].getElementsByTagName('th');
-	var i,l;
-	for(i = 0, l = ths.length; i < l; i++) {
-		ths[i].style.width = ths[i].offsetWidth - (hasClass(ths[i], 'unit') ? 0 : 20) + 'px';
+	var ths, i, l;
+	ths = document.querySelectorAll('table th');
+	for (i = 0, l = ths.length; i < l; i++) {
+		ths[i].style.width = ths[i].offsetWidth - (ths[i].classList.contains('unit') ? 0 : 20) + 'px';
 	}
 };
 
-var getNewData = function (fParameters) {
+var getNewData = function (fParameters, history) {
+	if (history === undefined) {
+		history = true;
+	}
 	var parameters;
+	if (typeof fParameters === 'string') {
+//		parse query string
+	}
 	var event = ~['[object KeyboardEvent]', '[object Event]'].indexOf(fParameters.toString());
 	var isSubmit = true;
 
-	if(event && this.nodeName === 'INPUT')
+	if (event && this.nodeName === 'INPUT') {
 		isSubmit = fParameters.keyCode === 13;
-	if(event && isSubmit) {
+	}
+	if (event && isSubmit) {
 		parameters = {};
 		parameters[this.name] = this.value;
 	}
@@ -98,50 +214,52 @@ var getNewData = function (fParameters) {
 		parameters = fParameters;
 	}
 	console.log(parameters);
-	//TODO encodeURI before change path
-	// change the page address
+	// change the page address to needed
 	// add to history
+	if (history) {
+		window.history.pushState();
+	}
 	// get new data
-	// change all links (reinit paginator)
+	// change all links (reinit paging)
 };
 
 var toggleSearchClass = function (input) {
 	console.log(input.toString());
-	if(typeof input === 'undefined' || ~['[object KeyboardEvent]', '[object Event]'].indexOf(input.toString()))
+	if (input === undefined || ~['[object KeyboardEvent]', '[object Event]'].indexOf(input.toString())) {
 		input = this;
+	}
 	toggleClass(input, 'noEmpty', input.value.length);
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function hasClass(el, cls) {
-	return el && (new RegExp('( |^)' + cls + '( |$)')).test(el.className);
-}
-function addClass(el, cls) {
-	if(!hasClass(el, cls))
-		el.className += " " + cls;
-}
-function removeClass(el, cls) {
-	if(hasClass(el, cls))
-		el.className = el.className.replace((new RegExp('( +|^)' + cls + '( +|$)')), ' ');
+
+var toggleClass = function (el, cls, trigger) {
+	if (trigger === undefined) {
+		return el.classList.toggle(cls);
+	}
+	return trigger ?
+	       el.classList.add(cls) :
+	       el.classList.remove(cls);
 }
 
-function toggleClass(el, cls, trigger) {
-	if(typeof trigger === 'undefined')
-		trigger = !hasClass(el, cls);
-	if(trigger)
-		addClass(el, cls);
-	else
-		removeClass(el, cls);
-}
-
-function getAbsolutePosition(obj) {
+var getAbsolutePosition = function (obj) {
 	var curLeft = 0, curTop = 0;
-	if(obj.offsetParent) {
+	if (obj.offsetParent) {
 		do {
 			curLeft += obj.offsetLeft;
 			curTop += obj.offsetTop;
-		} while(obj = obj.offsetParent);
+		} while (obj = obj.offsetParent);
 	}
 	return {left: curLeft, top: curTop};
-}
+};
+
+var extend = function () {
+	var result, j;
+	result = {};
+	for (var i = 0, l = arguments.length; i < l; i++)
+		if (typeof arguments[i] == 'object')
+			for (j in arguments[i])
+				if (arguments[i].hasOwnProperty(j))
+					result[j] = arguments[i][j];
+	return result;
+};

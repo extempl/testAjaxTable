@@ -244,7 +244,7 @@ table.main th.sortAsc > span > a::before {
 	margin: 4px;
 }
 
-.paginator {
+.paging {
 	font-family: Arial;
 	font-size: 14px;
 	margin-left: 27px;
@@ -252,33 +252,33 @@ table.main th.sortAsc > span > a::before {
 	list-style: none;
 }
 
-.paginator > li, .paginator a {
+.paging > li, .paging a {
 	display: inline-block;
 }
 
-.paginator > li.current {
+.paging > li.current {
 	background-color: #f3f2f7;
 	font-weight: bold;
 }
 
-.paginator > li.current > a {
+.paging > li.current > a {
 	color: #d43f48;
 	cursor: default;
 	text-decoration: none;
 }
 
-.paginator > li.disabled > a {
+.paging > li.disabled > a {
 	color: #d5d5d5 !important;
 	cursor: default;
 }
 
-.paginator a {
+.paging a {
 	padding: 2px 6px;
 	color: #689db8;
 	text-decoration: underline;
 }
 
-.paginator > li:first-child > a, .paginator > li:last-child > a {
+.paging > li:first-child > a, .paging > li:last-child > a {
 	text-decoration: none;
 }
 
