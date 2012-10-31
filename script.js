@@ -270,7 +270,10 @@
 		}
 		ths = document.querySelectorAll('table th');
 		for (i = 0, l = ths.length; i < l; i++) {
-			ths[i].style.width = ths[i].offsetWidth - (ths[i].classList.contains('unit') ? 0 : 20) + 'px';
+			ths[i].style.width = ths[i].offsetWidth -
+			                     (ths[i].classList.contains('unit') ? 0  :
+			                     (ths[i].classList.contains('num')  ? 10 : 20)
+				                 ) + 'px';
 		}
 	};
 
@@ -290,9 +293,11 @@
 			isSubmit = fParameters.keyCode === 13;
 		}
 		if (event) {
+			fParameters.stopPropagation();
 			if(isSubmit)
 				parameters[this.name] = this.value;
-			fParameters.stopPropagation();
+			else
+				return true;
 		}
 		else if (typeof fParameters === 'string') {
 			parameters = parseURLData(fParameters.split('?')[1]);
