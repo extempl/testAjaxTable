@@ -106,6 +106,7 @@ table.main thead.docked {
 	position:     fixed;
 	top:          0;
 	background:   #fff;
+	z-index: 10;
 }
 
 table.main .dockedHelper.docked {
@@ -293,7 +294,7 @@ table.main th.sortAsc > span > a::before {
 	display: none;
 }
 
-.popupWrapper.editing {
+.popupWrapper.visible {
 	display: block;
 }
 

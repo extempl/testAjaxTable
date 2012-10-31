@@ -3,9 +3,9 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js"></script>
+
 </head>
-<body onload="init();">
+<body>
 <nav class="main">
     <ul>
         <li><a href="">Дела</a></li>
@@ -32,7 +32,7 @@
     <table class="main">
         <thead>
             <tr>
-                <th class="sortDesc sortable" data-name="name"><span><a href="">Название</a></span></th>
+                <th class="sortable" data-name="name"><span><a href="">Название</a></span></th>
                 <th class="sortable" data-name="kinOfActivity"><span><a href="">Виды деятельности</a></span></th>
                 <th class="sortable" data-name="contact"><span><a href="">Контактное лицо</a></span></th>
                 <th class="sortable num" data-name="earned"><span><a href="">Заработано</a></span></th>
@@ -44,54 +44,44 @@
             </tr>
         </thead>
         <tbody>
-        <tr class="dockedHelper"><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr>
-            <td><a href="">5 элемент</a></td>
-            <td class="empty"></td>
-            <td><a href="">Константин Рыкин</a></td>
-            <td class="num">12323</td>
-            <td></td>
-            <td class="num">102323</td>
-            <td></td>
-            <td class="deals">
-                <div class="yellowDeals manyDeals">22</div>
-                <div class="greenDeals fewDeals">5</div>
-                <div class="redDeals normalDeals">11</div>
-            </td>
-            <td class="edit"><div class="icon"></div></td>
-        </tr>
-        <tr>
-            <td><a href="">5 элемент</a></td>
-            <td class="empty"></td>
-            <td><a href="">Константин Рыкин</a></td>
-            <td class="num empty"></td>
-            <td></td>
-            <td class="num">102323</td>
-            <td></td>
-            <td class="deals">
-                <div class="yellowDeals manyDeals">22</div>
-                <div class="greenDeals normalDeals">12</div>
-            </td>
-            <td class="edit">
-                <div class="icon"></div>
-            </td>
-        </tr>
+            <tr>
+                <td><a href="">5 элемент</a></td>
+                <td class="empty"></td>
+                <td><a href="">Константин Рыкин</a></td>
+                <td class="num">12323</td>
+                <td></td>
+                <td class="num">102323</td>
+                <td></td>
+                <td class="deals">
+                    <div class="yellowDeals manyDeals">22</div>
+                    <div class="greenDeals fewDeals">5</div>
+                    <div class="redDeals normalDeals">11</div>
+                </td>
+                <td class="edit"><div class="icon"></div></td>
+            </tr>
+            <tr>
+                <td><a href="">5 элемент</a></td>
+                <td class="empty"></td>
+                <td><a href="">Константин Рыкин</a></td>
+                <td class="num empty"></td>
+                <td></td>
+                <td class="num">102323</td>
+                <td></td>
+                <td class="deals">
+                    <div class="yellowDeals manyDeals">22</div>
+                    <div class="greenDeals normalDeals">12</div>
+                </td>
+                <td class="edit">
+                    <div class="icon"></div>
+                </td>
+            </tr>
         </tbody>
     </table>
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-    <ul class="paging">
-        <li class="disabled"><a href="">← Ctrl</a></li>
-        <li class="current"><a href="">1</a></li>
-        <li><a href="">2</a></li>
-        <li><a href="">3</a></li>
-        <li><a href="">4</a></li>
-        <li>...</li>
-        <li><a href="">18</a></li>
-        <li><a href="">Ctrl →</a></li>
-    </ul>
+    <ul class="paging"></ul>
 </div>
 <div class="popupWrapper">
     <div class="popup">
@@ -120,10 +110,11 @@
         </div>
         <div class="closeIcon"></div>
         <h1 class="main">Редактировать клиента</h1>
-        <form>
+        <form class="popupForm">
             <input type="submit" value="Сохранить" />
         </form>
     </div>
 </div>
 </body>
+<script src="script.js"></script>
 </html>
