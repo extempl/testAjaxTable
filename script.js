@@ -156,7 +156,7 @@
 		return window.location.pathname + makeURLFromData(extend(parseURLData(), data));
 	};
 
-	var updatePageAHREF = function (els, offset, count) {
+	var updatePageAHREF = function (els, offset) {
 		var pageNum, i, l;
 		for (i = 0, l = els.length; i < l; i++) {
 			switch (i) {
@@ -196,7 +196,7 @@
 		}
 		appendLI('<a>Ctrl →</a>', offset === count, 'disabled');
 		// update every page link with current link, but extended with pageNum
-		updatePageAHREF(pagingEl.querySelectorAll('a'), offset, count);
+		updatePageAHREF(pagingEl.querySelectorAll('a'), offset);
 		makeAJAXLinks(pagingEl);
 	};
 
