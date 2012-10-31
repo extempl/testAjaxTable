@@ -315,6 +315,7 @@
 
 		// get new data from AJAX, but not on initial page load (history === false) TODO
 		setTheadWidth(); // run after replacing TRs
+//		bindTable();
 		var data = {pagesCount: 18};
 		updateControlsByData(extend(parameters, data)); // must be data on ajax and parameters initially
 
