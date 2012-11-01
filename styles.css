@@ -123,6 +123,7 @@ table.main th {
 }
 
 table.main > thead th {
+	white-space: nowrap;
 	border-bottom: 2px solid #f3f6f8;
 }
 
