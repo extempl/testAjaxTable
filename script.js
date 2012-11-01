@@ -251,23 +251,31 @@
 		scrolledEnough = document.body.scrollTop > getAbsolutePosition(table).top;
 		toggleClass(table.querySelector('thead'), 'docked', scrolledEnough);
 		toggleClass(table.querySelector('.dockedHelper'), 'docked', scrolledEnough);
+		if(!scrolledEnough) {
+			setTheadWidth(); //TODO put recalcWidth where it need to
+		}
 	};
 
-	var setTheadWidth = function () {
-		var ths, i, l;
+	var createDockedHelper = function () {
 		// add helper
-		if(!document.querySelector('.dockedHelper')) {
+		var i, l;
+		if (!document.querySelector('.dockedHelper')) {
 			var tbody = document.querySelector('tbody');
 			var helper = document.createElement('tr');
 			helper.className = 'dockedHelper';
 			var theadTHs = document.querySelectorAll('table thead th');
 			var helperTHs = '';
-			for(i = 0, l = theadTHs.length; i < l; i++) {
+			for (i = 0, l = theadTHs.length; i < l; i++) {
 				helperTHs += '<th></th>';
 			}
 			helper.innerHTML = helperTHs;
 			tbody.insertBefore(helper, tbody.firstChild);
 		}
+	};
+
+	var setTheadWidth = function () {
+		createDockedHelper();
+		var ths, i, l;
 		ths = document.querySelectorAll('table th');
 		for (i = 0, l = ths.length; i < l; i++) {
 			ths[i].style.width = ths[i].offsetWidth -
