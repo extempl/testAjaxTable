@@ -8,13 +8,13 @@
 		table = document.querySelector('table.main');
 		popup = document.querySelector('.popupWrapper');
 
-		inputSearch.addEventListener('change', toggleSearchClass);
-		inputSearch.addEventListener('keyup', toggleSearchClass);
-		inputSearch.addEventListener('keydown', getNewData);
+		inputSearch.addEventListener('change', inputSearchHandler);
+		inputSearch.addEventListener('keyup', inputSearchHandler);
+		inputSearch.addEventListener('paste', inputSearchHandler);
 
 		filter.querySelector('.searchClear').addEventListener('click', function () {
 			inputSearch.value = '';
-			toggleSearchClass(inputSearch);
+			inputSearch.classList.remove('notEmpty');
 		});
 		filter.querySelector('.kindOfActivity > select').addEventListener('change', getNewData);
 
@@ -25,14 +25,35 @@
 			getNewData(window.location.pathname + window.location.search, false);
 		});
 		window.addEventListener('keydown', globalKeyDownHandler);
+		window.addEventListener('resize', setTheadWidth);
 
 		popup.querySelector('.closeIcon').addEventListener('click', popupManage.hide);
-		popup.querySelector('.popupForm').addEventListener('submit', popupSubmitHanlder);
+		popup.querySelector('.popupForm').addEventListener('submit', popupSubmitHandler);
 
 		bindTable();
 	};
 
-	var popupSubmitHanlder = function (e) {
+	var inputSearchHandler = function (e) {
+		var self = this;
+		var timeout = self.getAttribute('data-timeout');
+
+		toggleClass(self, 'noEmpty', self.value.length);
+
+		if(timeout)
+			clearTimeout(+timeout);
+
+		self.setAttribute('data-timeout', setTimeout(function () {
+			self.removeAttribute('data-timeout');
+			var parameters = {};
+			parameters[self.name] = self.value;
+			getNewData(parameters);
+		}, 500));
+
+		e.stopPropagation();
+		return true;
+	};
+
+	var popupSubmitHandler = function (e) {
 		// here is submit popup form handling
 		e.preventDefault();
 		popupManage.hide();
@@ -226,7 +247,7 @@
 			for (i = tmpI; i <= offset; i++) {
 				list.push(i);
 			}
-		} // before offset not including it
+		} // before offset excluding it
 
 		offsetTmp = offset + 1;
 		l = offsetTmp + (count - offsetTmp > 2 ? 3 : count - offsetTmp);
@@ -249,11 +270,8 @@
 		var table, scrolledEnough;
 		table = document.querySelector('table');
 		scrolledEnough = document.body.scrollTop > getAbsolutePosition(table).top;
-		toggleClass(table.querySelector('thead'), 'docked', scrolledEnough);
+		toggleClass(table.querySelector('thead'),         'docked', scrolledEnough);
 		toggleClass(table.querySelector('.dockedHelper'), 'docked', scrolledEnough);
-		if(!scrolledEnough) {
-			setTheadWidth(); //TODO put recalcWidth where it need to
-		}
 	};
 
 	var createDockedHelper = function () {
@@ -276,13 +294,18 @@
 	var setTheadWidth = function () {
 		createDockedHelper();
 		var ths, i, l;
+
+		document.querySelector('thead').classList.remove('docked');
+
 		ths = document.querySelectorAll('table th');
 		for (i = 0, l = ths.length; i < l; i++) {
-			ths[i].style.width = ths[i].offsetWidth -
-			                     (ths[i].classList.contains('unit') ? 0  :
-			                     (ths[i].classList.contains('num')  ? 10 : 20)
-				                 ) + 'px';
+			ths[i].style.width = ths[i].offsetWidth - (
+				ths[i].classList.contains('unit') ? 0 :
+				(ths[i].classList.contains('num') ? 10 : 20)
+			) + 'px';
 		}
+
+		theadReposition();
 	};
 
 	var getNewData = function (fParameters, history) {
@@ -294,20 +317,7 @@
 	//		parse query string
 			parameters = parseURLData(fParameters.split('?')[1]);
 		}
-		var event = ~['[object KeyboardEvent]', '[object Event]'].indexOf(fParameters.toString());
-		var isSubmit = true;
-
-		if (event && this.nodeName === 'INPUT') {
-			isSubmit = fParameters.keyCode === 13;
-		}
-		if (event) {
-			fParameters.stopPropagation();
-			if(isSubmit)
-				parameters[this.name] = this.value;
-			else
-				return true;
-		}
-		else if (typeof fParameters === 'string') {
+		if (typeof fParameters === 'string') {
 			parameters = parseURLData(fParameters.split('?')[1]);
 	//		parse query string
 		} else {
@@ -346,7 +356,6 @@
 		document.querySelector('.filter > .kindOfActivity > select').value = parameters.kindOfActivity;
 		var searchEl = document.querySelector('.filter > .search > input');
 		searchEl.value = parameters.search;
-		toggleSearchClass(searchEl);
 	};
 
 	var setSortingColumn = function (sortName, sortDir) {
@@ -361,13 +370,6 @@
 		if (someSortedDesc)
 			someSortedDesc.classList.remove('sortDesc');
 		thead.querySelector('th[data-name="' + sortName + '"]').classList.add('sort' + sortDir[0].toUpperCase() + sortDir.substring(1));
-	};
-
-	var toggleSearchClass = function (input) {
-		if (input === undefined || ~['[object KeyboardEvent]', '[object Event]'].indexOf(input.toString())) {
-			input = this;
-		}
-		toggleClass(input, 'noEmpty', input.value.length);
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
