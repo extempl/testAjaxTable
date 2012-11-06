@@ -177,15 +177,15 @@
 		return window.location.pathname + makeURLFromData(extend(parseURLData(), data));
 	};
 
-	var updatePageAHREF = function (els, offset) {
+	var updatePageAHREF = function (els, selected) {
 		var pageNum, i, l;
 		for (i = 0, l = els.length; i < l; i++) {
 			switch (i) {
 				case 0:
-					pageNum = offset - 1;
+					pageNum = selected - 1;
 					break;
 				case l - 1:
-					pageNum = offset + 1;
+					pageNum = selected + 1;
 					break;
 				default:
 					pageNum = els[i].innerHTML;
@@ -194,30 +194,30 @@
 		}
 	};
 
-	var renderPaging = function (offset, count) {
+	var renderPaging = function (selected, count) {
 		var pagingEl, list, i, l;
-		if (offset > count) {
-			offset = count;
+		if (selected > count) {
+			selected = count;
 		}
-		if (offset < 1) {
-			offset = 1;
+		if (selected < 1) {
+			selected = 1;
 		}
 
 		pagingEl = document.querySelector('.paging');
-		list = generatePagesList(offset, count);
+		list = generatePagesList(selected, count);
 		l = list.length;
 		pagingEl.innerHTML = '';
 
-		appendLI('<a>← Ctrl</a>', offset === 1, 'disabled');
+		appendLI('<a>← Ctrl</a>', selected === 1, 'disabled');
 		for(i = 0; i < l; i++) {
 			appendLI(
 				list[i] === 0 ? '...' : '<a>' + list[i] + '</a>',
-				offset === list[i],
+				selected === list[i],
 				'current');
 		}
-		appendLI('<a>Ctrl →</a>', offset === count, 'disabled');
+		appendLI('<a>Ctrl →</a>', selected === count, 'disabled');
 		// update every page link with current link, but extended with pageNum
-		updatePageAHREF(pagingEl.querySelectorAll('a'), offset);
+		updatePageAHREF(pagingEl.querySelectorAll('a'), selected);
 		makeAJAXLinks(pagingEl);
 	};
 
@@ -231,31 +231,31 @@
 		pagingEl.appendChild(li);
 	};
 
-	var generatePagesList = function (offset, count) {
-		var list, i, l, tmpI, offsetTmp;
+	var generatePagesList = function (selected, count) {
+		var list, i, l, tmpI, selectedTmp;
 		list = [1]; // always 1 page
 		if (count < 2) {
 			return list;
 		}
 
-		if (offset > 5) {
+		if (selected > 5) {
 			list.push(0);
 		} // ...
 
-		tmpI = offset - (offset > 4 ? 3 : offset - 2);
-		if (offset != 1) {
-			for (i = tmpI; i <= offset; i++) {
+		tmpI = selected - (selected > 4 ? 3 : selected - 2);
+		if (selected != 1) {
+			for (i = tmpI; i <= selected; i++) {
 				list.push(i);
 			}
-		} // before offset excluding it
+		} // before selected excluding it
 
-		offsetTmp = offset + 1;
-		l = offsetTmp + (count - offsetTmp > 2 ? 3 : count - offsetTmp);
-		for (i = offsetTmp; i < l; i++) {
+		selectedTmp = selected + 1;
+		l = selectedTmp + (count - selectedTmp > 2 ? 3 : count - selectedTmp);
+		for (i = selectedTmp; i < l; i++) {
 			list.push(i);
-		} // after offset including it
+		} // after selected including it
 
-		if (count - offset > 4) {
+		if (count - selected > 4) {
 			list.push(0);
 		} // ...
 
