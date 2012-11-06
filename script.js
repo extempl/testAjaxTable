@@ -247,13 +247,13 @@
 			for (i = tmpI; i <= selected; i++) {
 				list.push(i);
 			}
-		} // before selected excluding it
+		} // before selected including it
 
 		selectedTmp = selected + 1;
 		l = selectedTmp + (count - selectedTmp > 2 ? 3 : count - selectedTmp);
 		for (i = selectedTmp; i < l; i++) {
 			list.push(i);
-		} // after selected including it
+		} // after selected excluding it
 
 		if (count - selected > 4) {
 			list.push(0);
