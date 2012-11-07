@@ -313,11 +313,11 @@
 			history = true;
 		}
 		var parameters = {};
-		if (typeof fParameters === 'string') {
-	//		parse query string
-			parameters = parseURLData(fParameters.split('?')[1]);
+		if (~['[object KeyboardEvent]', '[object Event]'].indexOf(fParameters.toString())) {
+			parameters[this.name] = this.value;
+			fParameters.stopPropagation();
 		}
-		if (typeof fParameters === 'string') {
+		else if (typeof fParameters === 'string') {
 			parameters = parseURLData(fParameters.split('?')[1]);
 	//		parse query string
 		} else {
