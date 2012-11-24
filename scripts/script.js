@@ -1,4 +1,4 @@
-(function () {
+var initTable = function () {
 	"use strict";
 
 	var init = function () {
@@ -34,98 +34,32 @@
 		var formSalary = popup.querySelector('.formSalary');
 		var formSalaryParameters = {max: 24e4, step: 200, format: true};
 
-		var formAgeSlider = new Slider(document.querySelector('.formAge'), {min: 16, max: 70, updateParameters: formAgeParameters});
-		var formSalarySlider = new Slider(document.querySelector('.formSalary'), {max: 24e4, step: 200, boundaries: false, updateParameters: formSalaryParameters});
+		var formAgeSlider = new Slider(
+			document.querySelector('.formAge'),
+			extend(formAgeParameters, {updateMethod: correctValue})
+		);
+		var formSalarySlider = new Slider(
+			document.querySelector('.formSalary'),
+			extend(formSalaryParameters, {boundaries: false, updateMethod: correctValue})
+		);
 
 		formAge.addEventListener('keydown', function (e) {listDataByArrows(e, formAgeParameters, formAgeSlider)});
 		formAge.addEventListener('keyup',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
 		formAge.addEventListener('change',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
-		formAge.addEventListener('paste',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)}); // TODO change
+		formAge.addEventListener('paste',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
 
 
 		formSalary.addEventListener('keydown', function (e) {listDataByArrows(e, formSalaryParameters, formSalarySlider)});
 		formSalary.addEventListener('keyup',   function ()  {correctValue(this,  formSalaryParameters, formSalarySlider)});
-		formSalary.addEventListener('paste',   function ()  {correctValue(this,  formSalaryParameters, formSalarySlider)}); // TODO change
+		formSalary.addEventListener('paste',   function ()  {correctValue(this,  formSalaryParameters, formSalarySlider)});
 
-		// TODO stopPropogation on input click
-		// TODO move upper
+		new MoreThanOneValue(document.querySelector('.formPhone')); // TODO @.addValue() and remove all rows if unneeded
+		new MoreThanOneValue(document.querySelector('.formMail'));
+		new MoreThanOneValue(document.querySelector('.formSites'));
 
+		// TODO stopPropagation on input click
 
 		bindTable();
-	};
-
-	var Slider = function (el, config) {
-		config = extend({min: 0, boundaries: true, step: 1}, config);
-		this.config = config;
-		this.el = el;
-		this.offset = getAbsolutePosition(el);
-
-		var self = this;
-		this.onMouseMoveWrapper = function (e) {
-			self.onMouseMove(e);
-		};
-
-		this.init();
-	};
-
-	Slider.prototype = {
-		init: function () {
-			this.render();
-			this.sliderIcon.addEventListener('mousedown', this.onMouseDown.bind(this));
-			document.documentElement.addEventListener('mouseup', this.onMouseUp.bind(this));
-		},
-		render: function () {
-			var wrapper = document.createElement('div');
-			var inputFields = this.el.parentNode;
-			var sliderIcon = document.createElement('div');
-			sliderIcon.className = 'sliderIcon';
-			this.sliderIcon = sliderIcon;
-
-			wrapper.className = 'sliderWrapper';
-			if (this.config.boundaries) {
-				wrapper.innerHTML =
-				'<span class="minData">' + this.config.min + '</span>' +
-				'<span class="maxData">' + this.config.max + '</span>'
-			}
-			wrapper.appendChild(sliderIcon);
-			wrapper.appendChild(this.el);
-			inputFields.insertBefore(wrapper, inputFields.firstChild);
-		},
-		onMouseDown: function (e) {
-			e = fixEvent(e);
-			if(e.which != 1)
-				return true;
-			document.documentElement.classList.add('horizontalSlide');
-			document.documentElement.addEventListener('mousemove', this.onMouseMoveWrapper);
-			e.preventDefault();
-		},
-		onMouseMove: function (e) {
-			var left;
-			left = e.pageX - this.offset.left;
-			if(left < 0) {
-				left = 0;
-			}
-			else if(left > this.el.offsetWidth) {
-				left = this.el.offsetWidth;
-			}
-			this.updateInputData(left);
-			this.changePosition(left);
-		},
-		onMouseUp: function () {
-			document.documentElement.classList.remove('horizontalSlide');
-			document.documentElement.removeEventListener('mousemove', this.onMouseMoveWrapper);
-		},
-		changePosition: function (left) {
-			this.sliderIcon.style.left = left + 'px';
-		},
-		updateInputData: function (leftPx) {
-			var value = Math.round(
-				(((leftPx * 100) / this.el.offsetWidth) * // percentage position relative to input
-				((this.config.max / this.config.step - this.config.min / this.config.step) / 100) + // 1% relative to input based on min/max
-				this.config.min / this.config.step) // get data relative to min/max
-			) * this.config.step;
-			correctValue(this.el, extend(this.config.updateParameters, {value: value}));
-		}
 	};
 
 	var correctValue = function (el, parameters, slider) {
@@ -214,34 +148,8 @@
 			case 27: // esc
 				popupManage.hide();
 				break;
-//			case 37: // left
-//				moveToPage.backward(e);
-//				break;
-//			case 39: // right
-//				moveToPage.forward(e);
-//				break;
 		}
 	};
-
-	/*var moveToPage = {
-		pagingEl: function () {
-			return document.querySelector('.paging');
-		},
-		backward: function (e) {
-			this.moveTo(e, this.pagingEl().querySelector('a'));
-		},
-		forward: function (e) {
-			var links;
-			links = this.pagingEl().querySelectorAll('a');
-			this.moveTo(e, links[links.length - 1]);
-		},
-		moveTo: function (e, targetLink) {
-			if (!e.ctrlKey || targetLink.parentNode.classList.contains('disabled'))
-				return true;
-			getNewData(targetLink.getAttribute('href'));
-		}
-	};*/
-
 
 	var theadClickHandler = function (e) {
 		var el = e.target.parentNode.parentNode;
@@ -362,7 +270,6 @@
 		} else {
 			parameters = fParameters;
 		}
-		parameters = extend({page: 1}, parameters); // page reset
 		var targetURL = replaceURLWithData(parameters);
 		document.querySelector('title').innerHTML = targetURL;
 		// add to history
@@ -373,7 +280,7 @@
 		// get new data from AJAX, but not on initial page load (history === false) TODO
 		setTheadWidth(); // run after replacing TRs
 //		bindTable();
-		var data = {pagesCount: 18};
+		var data = {};
 		updateControlsByData(extend(parameters, data)); // must be data on ajax and parameters initially
 
 
@@ -381,8 +288,6 @@
 
 	var updateControlsByData = function (parameters) {
 		parameters = extend({
-			page: 1,
-			pageCount: 1,
 			search: '',
 			sortDir: 'desc'
 		}, parameters);
@@ -407,91 +312,5 @@
 		thead.querySelector('th[data-name="' + sortName + '"]').classList.add('sort' + sortDir[0].toUpperCase() + sortDir.substring(1));
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	var toggleClass = function (el, cls, trigger) {
-		if (trigger === undefined) {
-			return el.classList.toggle(cls);
-		}
-		return trigger ?
-		       el.classList.add(cls) :
-		       el.classList.remove(cls);
-	};
-
-	var getAbsolutePosition = function (obj) {
-		var curLeft = 0, curTop = 0;
-		if (obj.offsetParent) {
-			do {
-				curLeft += obj.offsetLeft;
-				curTop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		}
-		return {left: curLeft, top: curTop};
-	};
-
-	var extend = function () {
-		var result, i, l, j;
-		result = {};
-		for (i = 0, l = arguments.length; i < l; i++)
-			if (typeof arguments[i] == 'object')
-				for (j in arguments[i])
-					if (arguments[i].hasOwnProperty(j))
-						result[j] = arguments[i][j];
-		return result;
-	};
-
-	//customized for reversed count caret position
-	var selectionManage = {
-		get: function (el) {
-			var caretPos = 0;
-			// IE
-			if (document.selection) {
-				el.focus();
-				var sel = document.selection.createRange();
-				sel.moveStart('character', -el.value.length);
-				caretPos = sel.text.length;
-			}
-			// Firefox
-			else if (el.selectionStart || el.selectionStart == '0') {
-				caretPos = el.selectionStart;
-			}
-
-			return el.value.length - caretPos;
-		},
-		set: function (el, pos) {
-			pos = el.value.length - pos;
-			if (el.setSelectionRange) {
-				el.setSelectionRange(pos, pos);
-			}
-			else if (el.createTextRange) {
-				var range = el.createTextRange();
-				range.collapse(true);
-				range.moveStart('character', pos);
-				range.moveEnd('character', pos);
-				range.select();
-			}
-		}
-	};
-
-	function fixEvent(e) {
-		// получить объект событие для IE
-		e = e || window.event;
-
-		// добавить pageX/pageY для IE
-		if (e.pageX == null && e.clientX != null) {
-			var html = document.documentElement;
-			var body = document.body;
-			e.pageX = e.clientX + (html && html.scrollLeft || body && body.scrollLeft || 0) - (html.clientLeft || 0);
-			e.pageY = e.clientY + (html && html.scrollTop || body && body.scrollTop || 0) - (html.clientTop || 0);
-		}
-
-		// добавить which для IE
-		if (!e.which && e.button) {
-			e.which = e.button & 1 ? 1 : ( e.button & 2 ? 3 : ( e.button & 4 ? 2 : 0 ) );
-		}
-
-		return e
-	}
-
 	init();
-})();
+};

@@ -2,7 +2,17 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/slider.css" />
+    <link rel="stylesheet" href="styles/datePicker.css" />
+    <link rel="stylesheet" href="styles/selectCity.css" />
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/slider.js"></script>
+    <script src="scripts/jquery-1.7.1.js"></script>
+    <script src="scripts/datePicker.js"></script>
+    <script src="scripts/selectCity.js"></script>
+    <script src="scripts/moreThanOneValue.js"></script>
+    <script src="scripts/script.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
@@ -25,15 +35,15 @@
     <table class="main">
         <thead>
             <tr>
-                <th class="sortable" data-name="name"><span><a href="">Имя</a></span></th>
-                <th class="sortable num" data-name="age"><span><a href="">Возраст</a></span></th>
-                <th class="sortable num" data-name="earned"><span><a href="">Зарплата</a></span></th>
-                <th class="sortable" data-name="city"><span><a href="">Город</a></span></th>
-                <th class="sortable" data-name="phones"><span><a href="">Телефоны</a></span></th>
-                <th class="sortable" data-name="mail"><span><a href="">Почта</a></span></th>
-                <th class="sortable" data-name="sites"><span><a href="">Сайты</a></span></th>
-                <th class="sortable" data-name="birthday_date"><span><a href="">Дата рождения</a></span></th>
-                <th class="sortable" data-name="info"><span><a href="">Описание</a></span></th>
+                <th class="sortable" data-name="name"><span><span>Имя</span></span></th>
+                <th class="sortable num" data-name="age"><span><span>Возраст</span></span></th>
+                <th class="sortable num" data-name="earned"><span><span>Зарплата</span></span></th>
+                <th class="sortable" data-name="city"><span><span>Город</span></span></th>
+                <th class="sortable" data-name="phones"><span><span>Телефоны</span></span></th>
+                <th class="sortable" data-name="mail"><span><span>Почта</span></span></th>
+                <th class="sortable" data-name="sites"><span><span>Сайты</span></span></th>
+                <th class="sortable" data-name="birthday_date"><span><span >Дата рождения</span></span></th>
+                <th class="sortable" data-name="info"><span><span>Описание</span></span></th>
                 <th></th>
             </tr>
         </thead>
@@ -103,7 +113,7 @@
     <div style="height: 600px"></div>
 </div>
 <div class="popupWrapper visible">
-    <div class="popup">
+    <div class="popup formPopup">
         <div class="closeIcon"></div>
         <h1 class="main">Редактировать клиента</h1>
         <form class="popupForm">
@@ -121,7 +131,29 @@
                 </label></li>
                 <li><label>
                 <span class="label">Город</span>
-                    <div class="inputFields"><input /></div>
+                    <div class="inputFields">
+                        <select name="cities" data-type="selectCity">
+                            <optgroup label="Мегаполисы" data-label="main">
+                                <option value="Москва">Москва</option>
+                                <option value="Санкт-Петербург">Санкт-Петербург</option>
+                            </optgroup>
+                            <optgroup label="Большие города" data-label="big">
+                                <option value="Екатеринбург">Екатеринбург</option>
+                                <option value="Новосибирск">Новосибирск</option>
+                                <option value="Казань" selected="selected">Казань</option>
+                                <option value="Красноярск">Красноярск</option>
+                                <option value="Хабаровск">Хабаровск</option>
+                            </optgroup>
+                            <optgroup label="Остальные" data-label="other">
+                                <option value="Коркин">Коркин</option>
+                                <option value="Чебоксары">Чебоксары</option>
+                                <option value="Челюскин">Челюскин</option>
+                                <option value="Челябинск">Челябинск</option>
+                                <option value="Чернигов">Чернигов</option>
+                                <option value="Чехов">Чехов</option>
+                            </optgroup>
+                        </select>
+                    </div>
                 </label></li>
                 <li><label>
                     <span class="label">Зарплата</span>
@@ -130,25 +162,24 @@
                 <li><label>
                     <span class="label">Телефоны</span>
                     <div class="inputFields">
-                        <div><input /><input type="button" value="+" /></div>
-                        <div><input /><input type="button" value="−" /></div>
+                        <input class="formPhone" />
                     </div>
                 </label></li>
                 <li><label>
                     <span class="label">Почта</span>
                     <div class="inputFields">
-                        <div><input /><input type="button" value="+" /></div>
+                        <input class="formMail" />
                     </div>
                 </label></li>
                 <li><label>
                     <span class="label">Сайты</span>
                     <div class="inputFields">
-                        <div><input /><input type="button" value="+" /></div>
+                        <input class="formSites" />
                     </div>
                 </label></li>
                 <li><label>
                     <span class="label">Дата рождения</span>
-                    <div class="inputFields"><input /></div>
+                    <div class="inputFields"><input data-datepicker="true"/></div>
                 </label></li>
                 <li><label>
                     <span class="label">Описание</span>
@@ -160,5 +191,8 @@
     </div>
 </div>
 </body>
-<script src="script.js"></script>
+<script>
+    initTable();
+    initSelectCity();
+</script>
 </html>

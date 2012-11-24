@@ -76,7 +76,7 @@ h1 {
 .filter .searchClear {
 	height: 14px;
 	width: 14px;
-	background: transparent url(searchClear.png) no-repeat center center;
+	background: transparent url(../images/searchClear.png) no-repeat center center;
 	position: absolute;
 	right: 4px;
 	bottom: 4px;
@@ -128,11 +128,15 @@ table.main th > span {
 	display:  inline-block;
 }
 
-table.main th > span > a {
+table.main th > span > span {
 	position: relative;
 	text-decoration: none;
 	color: #5b5a5c;
 	border-bottom: 1px dashed #5b5a5c;
+	cursor: pointer;
+	-moz-user-select:    none;
+	-webkit-user-select: none;
+	-khtml-user-select:  none;
 }
 
 table.main > tbody > tr:hover {
@@ -191,16 +195,16 @@ table.main th.sortDesc > span, table.main th.sortAsc > span {
 	background-color: #f1f6fe;
 }
 
-table.main th.sortable > span > a::before {
+table.main th.sortable > span > span::before {
 	position: absolute;
 	left:     -12px;
 }
 
-table.main th.sortDesc > span > a::before {
+table.main th.sortDesc > span > span::before {
 	content: '↓';
 }
 
-table.main th.sortAsc > span > a::before {
+table.main th.sortAsc > span > span::before {
 	content: '↑';
 }
 
@@ -230,7 +234,7 @@ table.main th.sortAsc > span > a::before {
 .popup > .closeIcon {
 	width: 34px;
 	height: 34px;
-	background: #fff url(closePopup.png) no-repeat center center;
+	background: #fff url(../images/closePopup.png) no-repeat center center;
 	cursor: pointer;
 	box-shadow: 0 0 12px #999;
 	position: absolute;
@@ -241,19 +245,21 @@ table.main th.sortAsc > span > a::before {
 
 .popupForm {
 	margin: 20px;
+	font-family: Arial, serif;
+	font-size:   13px;
 }
 
-.popupForm ul {
+.popupForm > ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.popupForm li {
+.popupForm > ul > li {
 	margin: 0 0 15px;
 }
 
-.popupForm span, .popupForm input, .popupForm textarea {
+.popupForm span.label, .popupForm input, .popupForm textarea {
 	font-family: Arial, serif;
 	font-size: 13px;
 	height: 18px;
@@ -301,11 +307,11 @@ table.main th.sortAsc > span > a::before {
 	clear: both;
 }
 
-.popupForm .inputFields div {
+.popupForm .inputFields > div {
 	position: relative;
 }
 
-.popupForm .inputFields div:not(:first-child)  {
+.popupForm .inputFields > div:not(:first-child)  {
 	margin-top: 5px;
 }
 
@@ -333,38 +339,6 @@ table.main th.sortAsc > span > a::before {
 	text-align: right;
 }
 
-.sliderWrapper {
-	position: relative;
-	display: inline-block;
-	height: 20px;
-}
-
-.sliderWrapper .minData, .sliderWrapper .maxData, .sliderWrapper .sliderIcon {
-	height: 16px;
-	bottom: -16px;
-	position: absolute !important;
-	font-size: 8px;
-	-moz-user-select:    none;
-	-webkit-user-select: none;
-	-khtml-user-select:  none;
-}
-
-.sliderWrapper .minData {
-	right: 105%;
-}
-
-.sliderWrapper .maxData {
-	left: 105%;
-}
-
-.sliderWrapper .sliderIcon {
-	bottom: -17px;
-	margin: 0 -4px;
-	width: 9px;
-	background: transparent url(slider_icon9.png) center top no-repeat;
-	cursor: e-resize;
-}
-
-.horizontalSlide * {
-	cursor: e-resize !important;
+.maxValues input[type="button"][value="+"] {
+	display: none;
 }
