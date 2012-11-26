@@ -1,4 +1,4 @@
-(function () {
+var initTable = function () {
 	"use strict";
 
 	var init = function () {
@@ -16,7 +16,6 @@
 			inputSearch.value = '';
 			inputSearch.classList.remove('notEmpty');
 		});
-		filter.querySelector('.kindOfActivity > select').addEventListener('change', getNewData);
 
 		table.querySelector('thead').addEventListener('click', theadClickHandler);
 
@@ -30,7 +29,111 @@
 		popup.querySelector('.closeIcon').addEventListener('click', popupManage.hide);
 		popup.querySelector('.popupForm').addEventListener('submit', popupSubmitHandler);
 
+		var formAge = popup.querySelector('.formAge');
+		var formAgeParameters = {min: 16, max: 70, textEl: document.querySelector('.formAgeText')};
+		var formSalary = popup.querySelector('.formSalary');
+		var formSalaryParameters = {max: 24e4, step: 200, format: true};
+
+		var formAgeSlider = new Slider(
+			document.querySelector('.formAge'),
+			extend(formAgeParameters, {updateMethod: correctValue})
+		);
+		var formSalarySlider = new Slider(
+			document.querySelector('.formSalary'),
+			extend(formSalaryParameters, {boundaries: false, updateMethod: correctValue})
+		);
+
+		formAge.addEventListener('keydown', function (e) {listDataByArrows(e, formAgeParameters, formAgeSlider)});
+		formAge.addEventListener('keyup',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
+		formAge.addEventListener('change',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
+		formAge.addEventListener('paste',   function ()  {correctValue(this,  formAgeParameters, formAgeSlider)});
+
+
+		formSalary.addEventListener('keydown', function (e) {listDataByArrows(e, formSalaryParameters, formSalarySlider)});
+		formSalary.addEventListener('keyup',   function ()  {correctValue(this,  formSalaryParameters, formSalarySlider)});
+		formSalary.addEventListener('paste',   function ()  {correctValue(this,  formSalaryParameters, formSalarySlider)});
+
+		new MoreThanOneValue(document.querySelector('.formPhone')); // TODO @.addValue() and remove all rows if unneeded
+		new MoreThanOneValue(document.querySelector('.formMail'));
+		new MoreThanOneValue(document.querySelector('.formSites'));
+
+		new DatePicker({
+			i18n:       {
+				months:   [
+					'января' , 'февраля', 'марта',
+					'апреля' , 'мая'    , 'июня',
+					'июля'   , 'августа', 'сентября',
+					'октября', 'ноября' , 'декабря'
+				],
+				weekDays: [
+					'Вс', 'Пн', 'Вт',
+					'Ср', 'Чт', 'Пт', 'Сб'
+				]
+
+			},
+			dateFormat: 'd M yyyy'
+		});
+
+		new SelectCity({citiesListLimit: 5});
+
+		// TODO stopPropagation on input click
+
 		bindTable();
+	};
+
+	var correctValue = function (el, parameters, slider) {
+		var currentVal = el.value, result, value;
+		parameters = extend({min: 0, value: +currentVal.replace(/\s+/g, ''), format: false}, parameters);
+		value = Math.round(parameters.value);
+		if(value < parameters.min || isNaN(value))
+			value = parameters.min;
+		else if(value > parameters.max)
+			value = parameters.max;
+
+		result = parameters.format ? formatValue(value) : value;
+		if(result != currentVal) {
+			if(parameters.textEl) {
+				var text = 'полных лет';
+				if(/[^1]1/.test(value))
+					text = 'полный год';
+				else if(/[^1][2-4]/.test(value))
+					text = 'полных года';
+				parameters.textEl.innerHTML = text;
+			}
+			var selection = selectionManage.get(el);
+			el.value = result;
+			selectionManage.set(el, selection);
+			if(slider) {
+				var position =
+                    (((value * 100) / (parameters.max - parameters.min) * // percentage value relative to input based on min/max
+                    el.offsetWidth) / 100) - parameters.min; // get 1% of input and get relative to input data
+				slider.changePosition(position);
+			}
+		}
+	};
+
+	var formatValue = function (value) {
+		value = ('' + value).split('').reverse();
+		if(value.length > 3)
+			value.splice(3, 0, ' ');
+		return value.reverse().join('');
+	};
+
+	var listDataByArrows = function (e, parameters, slider) {
+		var step = parameters.step || 1, factor;
+		switch(e.keyCode) {
+			case 38:
+				factor = 1;
+				break;
+			case 40:
+				factor = -1;
+				break;
+			default:
+				return true;
+		}
+		correctValue(e.srcElement, extend({value: +e.srcElement.value.replace(/\s+/g, '') + step * factor}, parameters), slider);
+		e.preventDefault();
+		// prevent from moving
 	};
 
 	var inputSearchHandler = function (e) {
@@ -64,34 +167,8 @@
 			case 27: // esc
 				popupManage.hide();
 				break;
-			case 37: // left
-				moveToPage.backward(e);
-				break;
-			case 39: // right
-				moveToPage.forward(e);
-				break;
 		}
 	};
-
-	var moveToPage = {
-		pagingEl: function () {
-			return document.querySelector('.paging');
-		},
-		backward: function (e) {
-			this.moveTo(e, this.pagingEl().querySelector('a'));
-		},
-		forward: function (e) {
-			var links;
-			links = this.pagingEl().querySelectorAll('a');
-			this.moveTo(e, links[links.length - 1]);
-		},
-		moveTo: function (e, targetLink) {
-			if (!e.ctrlKey || targetLink.parentNode.classList.contains('disabled'))
-				return true;
-			getNewData(targetLink.getAttribute('href'));
-		}
-	};
-
 
 	var theadClickHandler = function (e) {
 		var el = e.target.parentNode.parentNode;
@@ -124,27 +201,6 @@
 		});
 	};
 
-	var makeAJAXLinks = function (env) {
-		if(env === undefined)
-			env = document;
-		var els = env.querySelectorAll('a[href]');
-		var i, l;
-		for(i = 0, l = els.length; i < l; i++) {
-			if(els[i].getAttribute('data-noajax') ||
-			   els[i].getAttribute('data-ajaxed') ||
-			   els[i].getAttribute('target') === '_blank')
-				continue;
-			els[i].addEventListener('click', function (e) {
-				if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-					if(!this.parentNode.classList.contains('disabled'))
-						getNewData(this.getAttribute('href'));
-					e.preventDefault();
-				}
-			});
-			els[i].setAttribute('data-ajaxed', true);
-		}
-	};
-
 	var parseURLData = function (url) {
 		var queryData, result, i, l, queryDataParts;
 		if(url === undefined)
@@ -165,9 +221,11 @@
 
 	var makeURLFromData = function (dataObj) {
 		var url = '';
+		var val;
 		for(var i in dataObj) {
 			if(dataObj.hasOwnProperty(i)) {
-				url += (!url ? '?' : '&') + i + '=' + encodeURIComponent(dataObj[i]);
+				if(val = encodeURIComponent(dataObj[i]))
+					url += (!url ? '?' : '&') + i + '=' + val;
 			}
 		}
 		return url;
@@ -175,95 +233,6 @@
 
 	var replaceURLWithData = function (data) {
 		return window.location.pathname + makeURLFromData(extend(parseURLData(), data));
-	};
-
-	var updatePageAHREF = function (els, selected) {
-		var pageNum, i, l;
-		for (i = 0, l = els.length; i < l; i++) {
-			switch (i) {
-				case 0:
-					pageNum = selected - 1;
-					break;
-				case l - 1:
-					pageNum = selected + 1;
-					break;
-				default:
-					pageNum = els[i].innerHTML;
-			}
-			els[i].setAttribute('href', replaceURLWithData({page: pageNum}));
-		}
-	};
-
-	var renderPaging = function (selected, count) {
-		var pagingEl, list, i, l;
-		if (selected > count) {
-			selected = count;
-		}
-		if (selected < 1) {
-			selected = 1;
-		}
-
-		pagingEl = document.querySelector('.paging');
-		list = generatePagesList(selected, count);
-		l = list.length;
-		pagingEl.innerHTML = '';
-
-		appendLI('<a>← Ctrl</a>', selected === 1, 'disabled');
-		for(i = 0; i < l; i++) {
-			appendLI(
-				list[i] === 0 ? '...' : '<a>' + list[i] + '</a>',
-				selected === list[i],
-				'current');
-		}
-		appendLI('<a>Ctrl →</a>', selected === count, 'disabled');
-		// update every page link with current link, but extended with pageNum
-		updatePageAHREF(pagingEl.querySelectorAll('a'), selected);
-		makeAJAXLinks(pagingEl);
-	};
-
-	var appendLI = function (text, condition, className) {
-		var pagingEl, li;
-		pagingEl = document.querySelector('.paging');
-		li = document.createElement('li');
-		li.innerHTML = text;
-		if(condition)
-			li.className = className;
-		pagingEl.appendChild(li);
-	};
-
-	var generatePagesList = function (selected, count) {
-		var list, i, l, tmpI, selectedTmp;
-		list = [1]; // always 1 page
-		if (count < 2) {
-			return list;
-		}
-
-		if (selected > 5) {
-			list.push(0);
-		} // ...
-
-		tmpI = selected - (selected > 4 ? 3 : selected - 2);
-		if (selected != 1) {
-			for (i = tmpI; i <= selected; i++) {
-				list.push(i);
-			}
-		} // before selected including it
-
-		selectedTmp = selected + 1;
-		l = selectedTmp + (count - selectedTmp > 2 ? 3 : count - selectedTmp);
-		for (i = selectedTmp; i < l; i++) {
-			list.push(i);
-		} // after selected excluding it
-
-		if (count - selected > 4) {
-			list.push(0);
-		} // ...
-
-		if (!~list.indexOf(count)) {
-			list.push(count);
-		} // last page if still not in the list
-
-		return list;
 	};
 
 	var theadReposition = function () {
@@ -299,10 +268,7 @@
 
 		ths = document.querySelectorAll('table th');
 		for (i = 0, l = ths.length; i < l; i++) {
-			ths[i].style.width = ths[i].offsetWidth - (
-				ths[i].classList.contains('unit') ? 0 :
-				(ths[i].classList.contains('num') ? 10 : 20)
-			) + 'px';
+			ths[i].style.width = ths[i].offsetWidth - 20 + 'px';
 		}
 
 		theadReposition();
@@ -323,7 +289,6 @@
 		} else {
 			parameters = fParameters;
 		}
-		parameters = extend({page: 1}, parameters); // page reset
 		var targetURL = replaceURLWithData(parameters);
 		document.querySelector('title').innerHTML = targetURL;
 		// add to history
@@ -334,7 +299,7 @@
 		// get new data from AJAX, but not on initial page load (history === false) TODO
 		setTheadWidth(); // run after replacing TRs
 //		bindTable();
-		var data = {pagesCount: 18};
+		var data = {};
 		updateControlsByData(extend(parameters, data)); // must be data on ajax and parameters initially
 
 
@@ -342,18 +307,12 @@
 
 	var updateControlsByData = function (parameters) {
 		parameters = extend({
-			page: 1,
-			pageCount: 1,
 			search: '',
-			kindOfActivity: 'all',
 			sortDir: 'desc'
 		}, parameters);
-		// render pages
-		renderPaging(+parameters.page, +parameters.pagesCount);
 		// set sorting if there is one
 		setSortingColumn(parameters.sort, parameters.sortDir);
 		// fill filter inputs if they are
-		document.querySelector('.filter > .kindOfActivity > select').value = parameters.kindOfActivity;
 		var searchEl = document.querySelector('.filter > .search > input');
 		searchEl.value = parameters.search;
 	};
@@ -372,38 +331,5 @@
 		thead.querySelector('th[data-name="' + sortName + '"]').classList.add('sort' + sortDir[0].toUpperCase() + sortDir.substring(1));
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	var toggleClass = function (el, cls, trigger) {
-		if (trigger === undefined) {
-			return el.classList.toggle(cls);
-		}
-		return trigger ?
-		       el.classList.add(cls) :
-		       el.classList.remove(cls);
-	};
-
-	var getAbsolutePosition = function (obj) {
-		var curLeft = 0, curTop = 0;
-		if (obj.offsetParent) {
-			do {
-				curLeft += obj.offsetLeft;
-				curTop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		}
-		return {left: curLeft, top: curTop};
-	};
-
-	var extend = function () {
-		var result, i, l, j;
-		result = {};
-		for (i = 0, l = arguments.length; i < l; i++)
-			if (typeof arguments[i] == 'object')
-				for (j in arguments[i])
-					if (arguments[i].hasOwnProperty(j))
-						result[j] = arguments[i][j];
-		return result;
-	};
-
 	init();
-})();
+};

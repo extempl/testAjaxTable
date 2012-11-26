@@ -1,0 +1,157 @@
+.datePicker {
+	display: inline-block;
+	position: relative;
+}
+
+.datePicker > input {
+	padding-right: 20px !important;
+}
+
+.calendar_icon {
+	background: transparent url(data:image/gif;base64,R0lGODlhDQAKAIABAAAAAP///yH5BAEKAAEALAAAAAANAAoAAAIXjIGpFnDfmItU2Qun1vncz1VSRzXgFBQAOw==) no-repeat center center;
+	height: 13px !important;
+	width: 13px;
+	position:absolute;
+	right: 5px;
+	top: 4px;
+	cursor: pointer;
+}
+
+#popupDatePicker {
+	height: 190px;
+	width: 190px;
+	position: absolute;
+	display: none;
+	background-color: #fff;
+	border: 1px solid #b4b4b4;
+	border-radius: 5px;
+	padding: 2px;
+	margin: 0;
+	top: 21px;
+	left: 21px;
+	z-index: 10001;
+	cursor: default;
+	text-align: center;
+	font-size: 12px;
+	font-family: Arial;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+}
+
+#dataPickerHeader {
+	background: #f3e7cd;
+	border: 1px solid #f3dec4;
+	border-radius: 2px;
+	height: 14px;
+	padding: 5px 0;
+	position: relative;
+	font-size: 10px;
+
+}
+
+#datePickerCentralHeader * {
+	display: none;
+}
+
+#datePickerCentralHeader > [data-section="days"],
+#datePickerCentralHeader .currentSection,
+#datePickerCentralHeader > .currentSection[data-section="days"] > span {
+	display: inline;
+	padding: 6px 3px;
+}
+
+#datePickerCentralHeader > [data-section="days"] *:hover {
+	cursor: pointer;
+	background-color: rgba(0, 0, 0, .1);
+}
+
+#leftDatePickerLister, #rightDatePickerLister {
+	height: 10px;
+	width: 8px;
+	padding: 7px;
+	cursor: pointer;
+	background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAApCAYAAAAI/2gYAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAARlJREFUOMvlkrFKA1EQRc/kZX1xsygiayEituIvBN1eSyvBYG2TJr214A/YaqtY2AtC0pginYWllZWiwY1mnX020U1cNz+QgdfMHO67M1yYijJFg4DQS9C60Edy04Vgk0HSJGVFZsiAFFYdflPR2k9PqCF+i/kYW0fYx1EeFRMMIVQuUDf3n5fSjtIT1XbhFnugEenNLXqHses4tzgGREOTETzdu+TqnfQZzAYwW3wdj6rBNBDbmXjFZVhjSkqwBwGhNwGxXUr2mkqwRR/5+wRsN8ufaQnxSQkesx9GgGHnC8e5z+dZXOM1D/zKyRt87JYLzau2t6GXB4x5EI2Pj6ALjAX0BQanS+ouD0FHtGzHYBp4VKc+FBPqG+89UCpfkCgLAAAAAElFTkSuQmCC) no-repeat center top;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#leftDatePickerLister:hover, #rightDatePickerLister:hover {
+	background-color: rgba(0, 0, 0, .1);
+}
+
+#rightDatePickerLister {
+	background-position: center bottom;
+	left: auto;
+	right: 0;
+}
+
+#datePickerToday {
+	background: #fff;
+	border: 1px solid #aaa;
+	color: #0097c6;
+	height: 18px;
+	cursor: pointer;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 0 10px;
+	margin: 5px;
+}
+
+#datePickerToday:hover {
+	background-color: #eee;
+}
+
+#tableWrapper {
+	margin: 3px;
+	height: 130px;
+}
+
+#datePickerTable {
+	width: 100%;
+	height: 100%;
+	color: #000;
+	text-align: center;
+	font-weight: bold;
+	border-collapse: separate;
+	border-spacing:  2px;
+}
+
+#datePickerTable th {
+	text-align: center;
+}
+
+#datePickerTable td {
+	border: 1px solid #aaa;
+	background-color: #fcfcfc;
+	cursor: pointer;
+}
+
+#datePickerTable td:hover {
+	background-color: #eee !important;
+}
+
+#datePickerTable td[data-disabled] {
+	color: #d2d2d2;
+	cursor: default;
+	background-color: inherit !important;
+}
+
+#datePickerTable[data-type="days"] {
+	color: #888;
+	font-size: 10px;
+	text-align: right;
+}
+
+#datePickerTable[data-type="days"] td {
+	border-color: #fcfcfc;
+	width: 24px;
+	background-color: #fff;
+	padding-right: 3px;
+}
+
+.currentItem {
+	color: #f80;
+	border-color: #ffc900 !important;
+}

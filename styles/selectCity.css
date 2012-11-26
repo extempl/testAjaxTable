@@ -1,0 +1,103 @@
+.selectCityWrapper {
+	position: relative;
+	display: inline-block;
+}
+
+.selectCityWrapper, .selectCityWrapper input, .selectCityWrapper button {
+	font-family: Verdana;
+	font-size:   11px;
+}
+
+.selectCityWrapper button {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAFCAQAAADfhhWZAAAABGdBTUEAALGPC/xhBQAAAAJiS0dEAP7wiPwpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVQI12NgWcP4GwZZ1jCgAXnmqxAp5qsM8gwYwB0iyeDOgBV0M/5m6GbABTBtY2BgYAAA+h8Rc1nZBkQAAAAASUVORK5CYII=), -webkit-linear-gradient(top, #fefefe 0%, #ececec 100%);
+	background-position: right center;
+	background-repeat: no-repeat, repeat;
+	box-shadow: #b8b8b8 0 1px 1px;
+	padding: 2px 20px 0 4px;
+	height: 20px;
+	border: 1px solid #e0e0e0;
+	border-radius: 3px;
+	cursor: pointer;
+	margin: 0;
+}
+
+.selectCityWrapper > button:active, .selectCityWrapper.opened > button {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAFCAQAAADfhhWZAAAABGdBTUEAALGPC/xhBQAAAAJiS0dEAP7wiPwpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVQI12NgWcP4GwZZ1jCgAXnmqxAp5qsM8gwYwB0iyeDOgBV0M/5m6GbABTBtY2BgYAAA+h8Rc1nZBkQAAAAASUVORK5CYII=), -webkit-linear-gradient(top, #e7e7e7 0%, #fbfbfb 100%);
+	box-shadow: inset #b8b8b8 0 1px 1px;
+}
+
+.popupCityWrapper {
+	z-index: 10;
+	background: #fff;
+	position: absolute;
+	border: 1px solid #e0e0e0;
+	border-bottom-color: #747474;
+	border-radius:4px;
+	box-shadow: #a4a4a4 0 2px 3px;
+	left: 0;
+	display: none;
+	margin-top: 2px;
+	min-width: 136px;
+}
+
+.selectCityWrapper.opened > .popupCityWrapper {
+	display: block;
+}
+
+.popupCityWrapper > ul {
+	max-height: 85px;
+	overflow-y: auto;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.popupCityWrapper > ul > li {
+	cursor: pointer;
+	padding: 2px 4px;
+	-moz-user-select:    none;
+	-webkit-user-select: none;
+	-khtml-user-select:  none;
+}
+
+.popupCityWrapper li.act, .popupCityWrapper > ul > li:hover  {
+	background: #a7d3ff;
+}
+
+.inputCitiesWrapper {
+	position: relative;
+	background: #fff;
+	height: 18px;
+	border: 1px solid #c7c7c7;
+	border-top-color: #747474;
+	border-bottom-color: #dcdcdc;
+	box-shadow: inset #c7c7c7 0 1px 1px;
+	margin: 8px 4px 4px;
+}
+
+.inputCitiesWrapper > * {
+	width: auto !important;
+	height: 16px !important;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin:  0;
+	padding: 0 2px;
+	border: none;
+}
+
+.inputCitiesWrapper > .pseudoPlaceholderCities {
+	color: #bbb;
+	padding: 2px;
+}
+
+.inputCitiesWrapper > input {
+	border: none !important;
+	box-shadow: none !important;
+	padding-bottom: 2px !important;
+	z-index: 1;
+	background: transparent;
+}
