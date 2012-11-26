@@ -1,0 +1,35 @@
+.sliderWrapper {
+	position: relative;
+	display:  inline-block;
+	height:   20px;
+}
+
+.sliderWrapper .minData, .sliderWrapper .maxData, .sliderWrapper .sliderIcon {
+	height:              8px;
+	bottom:              -8px;
+	position:            absolute !important;
+	font-size:           8px;
+	-moz-user-select:    none;
+	-webkit-user-select: none;
+	-khtml-user-select:  none;
+}
+
+.sliderWrapper .minData {
+	right: 105%;
+}
+
+.sliderWrapper .maxData {
+	left: 105%;
+}
+
+.sliderWrapper .sliderIcon {
+	bottom:     -9px;
+	margin:     0 -4px;
+	width:      9px;
+	background: transparent url(../images/slider_icon9.png) center top no-repeat;
+	cursor:     e-resize;
+}
+
+.horizontalSlide * {
+	cursor: e-resize !important;
+}

@@ -76,7 +76,7 @@ h1 {
 .filter .searchClear {
 	height: 14px;
 	width: 14px;
-	background: transparent url(searchClear.png) no-repeat center center;
+	background: transparent url(../images/searchClear.png) no-repeat center center;
 	position: absolute;
 	right: 4px;
 	bottom: 4px;
@@ -91,10 +91,6 @@ h1 {
 .filter > label > span {
 	font-weight: bold;
 	font-size: 11px;
-}
-
-.filter > .kindOfActivity > select {
-	width: 190px;
 }
 
 table.main {
@@ -129,14 +125,18 @@ table.main > thead th {
 
 table.main th > span {
 	padding:  4px 8px 8px 18px;
-	position: relative;
 	display:  inline-block;
 }
 
-table.main th > span > a {
+table.main th > span > span {
+	position: relative;
 	text-decoration: none;
 	color: #5b5a5c;
 	border-bottom: 1px dashed #5b5a5c;
+	cursor: pointer;
+	-moz-user-select:    none;
+	-webkit-user-select: none;
+	-khtml-user-select:  none;
 }
 
 table.main > tbody > tr:hover {
@@ -156,14 +156,15 @@ table.main td.edit > .icon {
 	position: absolute;
 	right: 10px;
 	top: 10px;
-	background: transparent url(pen.png) no-repeat center center;
+	color: #81a4b3;
 	width: 15px;
 	height: 15px;
+	font-size: 15px;
 	display: none;
 }
 
 table.main td {
-	padding: 10px 0 10px 27px;
+	padding: 10px 10px 10px 27px;
 	font-size: 14px;
 }
 
@@ -194,95 +195,17 @@ table.main th.sortDesc > span, table.main th.sortAsc > span {
 	background-color: #f1f6fe;
 }
 
-table.main th.sortable > span > a::before {
+table.main th.sortable > span > span::before {
 	position: absolute;
-	left:     7px;
+	left:     -12px;
 }
 
-table.main th.sortDesc > span > a::before {
+table.main th.sortDesc > span > span::before {
 	content: '↓';
 }
 
-table.main th.sortAsc > span > a::before {
+table.main th.sortAsc > span > span::before {
 	content: '↑';
-}
-
-.deals > * {
-	display: block;
-	float: left;
-	color: #fff;
-	font-size: 12px;
-	margin: 0 4px;
-	text-align: center;
-	height: 16px;
-	width:  16px;
-	padding: 0;
-}
-
-.greenDeals {
-	background-color: #95c015;
-}
-
-.yellowDeals {
-	background-color: #f5b200;
-}
-
-.redDeals {
-	background-color: #ff0700;
-}
-
-.manyDeals {
-	border-radius: 12px;
-	padding: 4px;
-}
-
-.normalDeals {
-	padding: 2px;
-	border-radius: 10px;
-	margin: 2px 4px;
-}
-
-.fewDeals {
-	border-radius: 8px;
-	margin: 4px;
-}
-
-.paging {
-	font-family: Arial;
-	font-size: 14px;
-	margin-left: 27px;
-	padding: 0;
-	list-style: none;
-}
-
-.paging > li, .paging a {
-	display: inline-block;
-}
-
-.paging > li.current {
-	background-color: #f3f2f7;
-	font-weight: bold;
-}
-
-.paging > li.current > a {
-	color: #d43f48;
-	cursor: default;
-	text-decoration: none;
-}
-
-.paging > li.disabled > a {
-	color: #d5d5d5 !important;
-	cursor: default;
-}
-
-.paging a {
-	padding: 2px 6px;
-	color: #689db8;
-	text-decoration: underline;
-}
-
-.paging > li:first-child > a, .paging > li:last-child > a {
-	text-decoration: none;
 }
 
 .popupWrapper {
@@ -311,7 +234,7 @@ table.main th.sortAsc > span > a::before {
 .popup > .closeIcon {
 	width: 34px;
 	height: 34px;
-	background: #fff url(closePopup.png) no-repeat center center;
+	background: #fff url(../images/closePopup.png) no-repeat center center;
 	cursor: pointer;
 	box-shadow: 0 0 12px #999;
 	position: absolute;
@@ -320,31 +243,102 @@ table.main th.sortAsc > span > a::before {
 	border-radius: 17px;
 }
 
-.popup > .popupLeftHeader, .popup > .popupArrow {
+.popupForm {
+	margin: 20px;
+	font-family: Arial, serif;
+	font-size:   13px;
+}
+
+.popupForm > ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.popupForm > ul > li {
+	margin: 0 0 15px;
+}
+
+.popupForm span.label, .popupForm input, .popupForm textarea {
+	font-family: Arial, serif;
+	font-size: 13px;
+	height: 18px;
+}
+
+.popupForm input:not([type]), .popupForm input[type="text"] {
+	background-color: transparent;
+	border: 1px solid;
+	border-color: #7c7c7c #c3c3c3 #ddd;
+	box-shadow: inset 0 1px 2px 0 #c3c3c3;
+	width: 179px;
+	padding: 0 2px;
+}
+
+.popupForm input[type="submit"], .popupForm input[type="button"] {
+	height: 21px;
+	cursor: pointer;
+}
+
+.popupForm input[type="button"] {
 	position: absolute;
-	left: -234px;
-	width: 220px;
-	top: 40px;
-	color: #fff;
-	font-size: 17px;
-	font-weight: bold;
-	padding: 15px;
+	bottom: 1px;
+	height: 19px;
+	padding-top: 0;
 }
 
-.popup > .popupArrow {
-	color: #000;
-	top: 90px;
-	width: 225px;
-	height: 25px;
+.popupForm input[type="submit"] {
+	font-size: 11px;
+	margin: 0;
 }
 
-.popup > .popupArrow > span {
+.popupForm label {
+	display: block;
+}
+
+.popupForm .label {
+	display: block;
+	width: 165px;
+	float: left;
+}
+
+.popupForm .inputFields {
+	display: inline-block;
+	width: 405px;
+	clear: both;
+}
+
+.popupForm .inputFields > div {
 	position: relative;
-	z-index: 1;
 }
 
-.popup > .popupArrow > svg {
-	position: absolute;
-	left: 0;
-	top: 0;
+.popupForm .inputFields > div:not(:first-child)  {
+	margin-top: 5px;
+}
+
+.popupForm .formName, .popupForm textarea {
+	width: 399px !important;
+}
+
+.popupForm textarea {
+	height: 49px;
+	padding: 2px;
+	border: 1px solid #7c7c7c;
+}
+
+.popupForm .formAge {
+	text-align: right;
+	width: 49px !important;
+}
+
+.popupForm .formAgeText {
+	margin-left: 7px;
+}
+
+.popupForm .formSalary {
+	width: 79px !important;
+	text-align: right;
+}
+
+.maxValues input[type="button"][value="+"] {
+	display: none;
 }
