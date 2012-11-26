@@ -1,9 +1,4 @@
 "use strict";
-var initSelectCity = function () {
-	var selectCity = new SelectCity({citiesListLimit: 5});
-	selectCity.init();
-};
-
 var SelectCity = function (parameters) {
 	// TODO make two options - from existing select and from transferred in parameters citiesList (one for all citiesSelects)
 	this.parameters = extend({
@@ -13,6 +8,8 @@ var SelectCity = function (parameters) {
 //			other:  ['Коркин', 'Чебоксары', 'Челюскин', 'Челябинск', 'Чернигов', 'Чехов']
 //		}
 	}, parameters || {});
+
+	this.init();
 };
 
 SelectCity.prototype = {

@@ -29,6 +29,8 @@ var DatePicker = function (parameters) {
 		month: today.getMonth(),
 		day:   today.getDate()
 	};
+
+	this.init();
 };
 
 DatePicker.prototype = {
@@ -362,6 +364,9 @@ DatePicker.prototype = {
 				      (dates.year != self.todayDates.year ? ' ' + dates.year : ''); // print year if it unequal to current
 				break;
 				// might be added more output formats here
+			case 'd M yyyy':
+				str = dates.day + ' ' + self.parameters.i18n.months[dates.month] + ' ' + dates.year;
+				break;
 		}
 		input.val(str);
 	},
@@ -375,15 +380,27 @@ DatePicker.prototype = {
 		value = el.val();
 		switch(self.parameters.dateFormat) {
 			case 'MMM d[ yyyy]':
-				var months = self.parameters.i18n.shortMonths;
-				dateVal = value.match(new RegExp('^(' + months.join('|') + ') (\\d{1,2})( (\\d{4}))?$', 'i'));
+				var shortMonths = self.parameters.i18n.shortMonths;
+				dateVal = value.match(new RegExp('^(' + shortMonths.join('|') + ') (\\d{1,2})( (\\d{4}))?$', 'i'));
 				if(dateVal) {
-					var month = dateVal[1].toLowerCase();
+					var shortMonth = dateVal[1].toLowerCase();
 					dates = {
 						year: dateVal[4] || self.todayDates.year,
 						// used Array.indexOf(). You need to implementate it, if not supports by target browser
-						month: months.indexOf(month[0].toUpperCase() + month.substring(1, 3)),
+						month: shortMonths.indexOf(shortMonth[0].toUpperCase() + shortMonth.substring(1, 3)),
 						day:   dateVal[2]
+					};
+				}
+				break;
+			case 'd M yyyy':
+				var months = self.parameters.i18n.months;
+				dateVal = value.match(new RegExp('^(\\d{1,2}) (' + months.join('|') + ') (\\d{4})$', 'i'));
+				if (dateVal) {
+					dates = {
+						year: dateVal[3] || self.todayDates.year,
+						// used Array.indexOf(). You need to implementate it, if not supports by target browser
+						month: months.indexOf(dateVal[2].toLowerCase()),
+						day:   dateVal[1]
 					};
 				}
 				break;
@@ -468,9 +485,9 @@ Date.prototype.getDaysInMonth.R = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 3
 // durations of months for the leap year
 Date.prototype.getDaysInMonth.L = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-$(function () {
-	if(typeof(doNotInitDatePicker) == 'undefined' || doNotInitDatePicker != true) {
-		var datePicker = new DatePicker();
-		datePicker.init();
-	}
-});
+//$(function () {
+//	if(typeof(doNotInitDatePicker) == 'undefined' || doNotInitDatePicker != true) {
+//		var datePicker = new DatePicker();
+//		datePicker.init();
+//	}
+//});

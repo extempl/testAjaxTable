@@ -57,6 +57,25 @@ var initTable = function () {
 		new MoreThanOneValue(document.querySelector('.formMail'));
 		new MoreThanOneValue(document.querySelector('.formSites'));
 
+		new DatePicker({
+			i18n:       {
+				months:   [
+					'января' , 'февраля', 'марта',
+					'апреля' , 'мая'    , 'июня',
+					'июля'   , 'августа', 'сентября',
+					'октября', 'ноября' , 'декабря'
+				],
+				weekDays: [
+					'Вс', 'Пн', 'Вт',
+					'Ср', 'Чт', 'Пт', 'Сб'
+				]
+
+			},
+			dateFormat: 'd M yyyy'
+		});
+
+		new SelectCity({citiesListLimit: 5});
+
 		// TODO stopPropagation on input click
 
 		bindTable();
